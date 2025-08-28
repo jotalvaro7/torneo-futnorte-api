@@ -23,6 +23,21 @@ Este proyecto implementa las mejores prácticas de la arquitectura de puertos y 
 - Testabilidad y mantenibilidad
 - Domain-Driven Design (DDD)
 
+## Dominio del Negocio
+Esta API está encargada de administrar un torneo de fútbol con las siguientes funcionalidades:
+
+### Funcionalidades Principales
+- **Gestión de Torneos**: Crear y administrar uno o varios torneos
+- **Gestión de Equipos**: Cada torneo debe tener equipos de fútbol
+- **Gestión de Jugadores**: Los equipos deben tener jugadores asociados
+- **Gestión de Enfrentamientos**: Registrar enfrentamientos entre equipos con sus estadísticas
+
+### Entidades del Dominio
+- **Torneo**: Entidad principal que agrupa equipos y enfrentamientos
+- **Equipo**: Representa un equipo de fútbol dentro de un torneo
+- **Jugador**: Representa un jugador asociado a un equipo
+- **Enfrentamiento**: Representa un partido entre dos equipos con estadísticas
+
 ## Comandos de Testing y Linting
 - Build: `./gradlew build` o `mvn clean install`
 - Tests: `./gradlew test` o `mvn test`
