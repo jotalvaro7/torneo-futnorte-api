@@ -23,6 +23,15 @@ Este proyecto implementa las mejores prácticas de la arquitectura de puertos y 
 - Testabilidad y mantenibilidad
 - Domain-Driven Design (DDD)
 
+### Reglas de Pureza del Dominio
+**IMPORTANTE**: Las entidades del dominio (domain/entities) deben mantenerse libres de cualquier dependencia de frameworks:
+- ❌ NO usar Lombok en entidades de dominio
+- ❌ NO usar anotaciones de Spring, JPA, o cualquier framework
+- ❌ NO importar librerías externas en el dominio
+- ✅ SÍ usar Java puro únicamente
+- ✅ SÍ mantener la lógica de negocio independiente
+- ✅ Los frameworks SOLO se pueden usar en capas de Infrastructure y Application
+
 ## Dominio del Negocio
 Esta API está encargada de administrar un torneo de fútbol con las siguientes funcionalidades:
 
