@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
 
 @Entity
 @Table(name = "equipos")
@@ -26,12 +25,7 @@ public class EquipoEntity {
     
     @Column(name = "torneo_id", nullable = false)
     private Long torneoId;
-    
-    @ElementCollection
-    @CollectionTable(name = "equipo_jugadores", joinColumns = @JoinColumn(name = "equipo_id"))
-    @Column(name = "jugador_id")
-    private List<Long> jugadoresIds;
-    
+
     @Column(nullable = false, columnDefinition = "integer default 0")
     private Integer puntos = 0;
     
