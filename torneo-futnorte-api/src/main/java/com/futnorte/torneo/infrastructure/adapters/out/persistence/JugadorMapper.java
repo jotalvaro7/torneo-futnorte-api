@@ -16,6 +16,7 @@ public class JugadorMapper {
         entity.setNombre(jugador.getNombre());
         entity.setApellido(jugador.getApellido());
         entity.setIdentificacion(jugador.getIdentificacion());
+        entity.setNacionalidad(jugador.getNacionalidad());
         entity.setEquipoId(jugador.getEquipoId());
         entity.setNumeroGoles(jugador.getNumeroGoles());
         
@@ -32,6 +33,7 @@ public class JugadorMapper {
         jugador.setNombre(entity.getNombre());
         jugador.setApellido(entity.getApellido());
         jugador.setIdentificacion(entity.getIdentificacion());
+        jugador.setNacionalidad(entity.getNacionalidad());
         jugador.setEquipoId(entity.getEquipoId());
         jugador.setNumeroGoles(entity.getNumeroGoles());
         

@@ -8,6 +8,7 @@ public class Jugador {
     private String nombre;
     private String apellido;
     private String identificacion;
+    private String nacionalidad;
     private Long equipoId;
     private int numeroGoles;
     
@@ -15,11 +16,12 @@ public class Jugador {
         this.numeroGoles = 0;
     }
     
-    public Jugador(String nombre, String apellido, String identificacion, Long equipoId) {
+    public Jugador(String nombre, String apellido, String identificacion, String nacionalidad, Long equipoId) {
         this();
         this.nombre = nombre;
         this.apellido = apellido;
         this.identificacion = identificacion;
+        this.nacionalidad = nacionalidad;
         this.equipoId = equipoId;
     }
     
@@ -42,6 +44,9 @@ public class Jugador {
         }
         if (this.identificacion == null || this.identificacion.trim().isEmpty()) {
             throw new IllegalArgumentException("La identificación del jugador es obligatoria");
+        }
+        if (this.nacionalidad == null || this.nacionalidad.trim().isEmpty()) {
+            throw new IllegalArgumentException("La nacionalidad del jugador es obligatoria");
         }
         if (this.equipoId == null) {
             throw new IllegalArgumentException("El jugador debe estar asociado a un equipo");
@@ -81,6 +86,14 @@ public class Jugador {
         this.identificacion = identificacion;
     }
     
+    public String getNacionalidad() {
+        return nacionalidad;
+    }
+    
+    public void setNacionalidad(String nacionalidad) {
+        this.nacionalidad = nacionalidad;
+    }
+    
     public Long getEquipoId() {
         return equipoId;
     }
@@ -117,6 +130,7 @@ public class Jugador {
                 ", nombre='" + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
                 ", identificacion='" + identificacion + '\'' +
+                ", nacionalidad='" + nacionalidad + '\'' +
                 ", equipoId=" + equipoId +
                 ", numeroGoles=" + numeroGoles +
                 '}';

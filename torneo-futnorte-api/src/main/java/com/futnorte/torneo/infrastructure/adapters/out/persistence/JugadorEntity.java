@@ -25,6 +25,9 @@ public class JugadorEntity {
     @Column(nullable = false, unique = true)
     private String identificacion;
     
+    @Column(nullable = false)
+    private String nacionalidad;
+    
     @Column(name = "equipo_id", nullable = false)
     private Long equipoId;
     

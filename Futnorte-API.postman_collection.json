@@ -206,7 +206,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nombre\": \"Cristiano\",\n    \"apellido\": \"Ronaldo\",\n    \"identificacion\": \"CR7001\",\n    \"equipoId\": 1,\n    \"numeroGoles\": 15\n}"
+							"raw": "{\n    \"nombre\": \"Cristiano\",\n    \"apellido\": \"Ronaldo\",\n    \"identificacion\": \"CR7001\",\n    \"nacionalidad\": \"Portuguesa\",\n    \"equipoId\": 1,\n    \"numeroGoles\": 15\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/jugadores",
@@ -275,7 +275,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nombre\": \"Vinícius Jr.\",\n    \"numeroGoles\": 12\n}"
+							"raw": "{\n    \"nombre\": \"Vinícius Jr.\",\n    \"nacionalidad\": \"Brasileña\",\n    \"numeroGoles\": 12\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/jugadores/1",
