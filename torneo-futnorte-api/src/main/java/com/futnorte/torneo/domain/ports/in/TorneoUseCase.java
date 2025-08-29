@@ -22,8 +22,4 @@ public interface TorneoUseCase {
     Torneo finalizarTorneo(Long id);
     
     void eliminarTorneo(Long id);
-    
-    Torneo agregarEquipo(Long torneoId, Long equipoId);
-    
-    Torneo removerEquipo(Long torneoId, Long equipoId);
 }

@@ -37,6 +37,4 @@ public class TorneoEntity {
     @Column(nullable = false)
     private EstadoTorneo estado;
     
-    @Column(name = "equipos_ids")
-    private String equiposIds;
 }

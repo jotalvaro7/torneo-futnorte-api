@@ -1,8 +1,6 @@
 package com.futnorte.torneo.domain.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Torneo {
@@ -13,10 +11,8 @@ public class Torneo {
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;
     private EstadoTorneo estado;
-    private List<Long> equiposIds;
     
     public Torneo() {
-        this.equiposIds = new ArrayList<>();
         this.estado = EstadoTorneo.CREADO;
     }
     
@@ -28,11 +24,11 @@ public class Torneo {
         this.fechaFin = fechaFin;
     }
     
-    public void iniciarTorneo() {
-        if (this.estado != EstadoTorneo.CREADO) {
-            throw new IllegalStateException("El torneo solo puede iniciarse si está en estado CREADO");
+    public void iniciarTorneo(int cantidadEquipos) {
+        if (this.estado == EstadoTorneo.FINALIZADO) {
+            throw new IllegalStateException("El torneo solo puede iniciarse si está en estado CREADO O CANCELADO");
         }
-        if (this.equiposIds.size() < 2) {
+        if (cantidadEquipos < 2) {
             throw new IllegalStateException("El torneo debe tener al menos 2 equipos para iniciarse");
         }
         this.estado = EstadoTorneo.EN_CURSO;
@@ -43,22 +39,6 @@ public class Torneo {
             throw new IllegalStateException("El torneo solo puede finalizarse si está EN_CURSO");
         }
         this.estado = EstadoTorneo.FINALIZADO;
-    }
-    
-    public void agregarEquipo(Long equipoId) {
-        if (this.estado != EstadoTorneo.CREADO) {
-            throw new IllegalStateException("Solo se pueden agregar equipos cuando el torneo está en estado CREADO");
-        }
-        if (!this.equiposIds.contains(equipoId)) {
-            this.equiposIds.add(equipoId);
-        }
-    }
-    
-    public void removerEquipo(Long equipoId) {
-        if (this.estado != EstadoTorneo.CREADO) {
-            throw new IllegalStateException("Solo se pueden remover equipos cuando el torneo está en estado CREADO");
-        }
-        this.equiposIds.remove(equipoId);
     }
     
     public void cancelarTorneo() {
@@ -127,13 +107,6 @@ public class Torneo {
         this.estado = estado;
     }
     
-    public List<Long> getEquiposIds() {
-        return equiposIds != null ? new ArrayList<>(equiposIds) : new ArrayList<>();
-    }
-    
-    public void setEquiposIds(List<Long> equiposIds) {
-        this.equiposIds = equiposIds != null ? new ArrayList<>(equiposIds) : new ArrayList<>();
-    }
     
     @Override
     public boolean equals(Object o) {
@@ -157,7 +130,6 @@ public class Torneo {
                 ", fechaInicio=" + fechaInicio +
                 ", fechaFin=" + fechaFin +
                 ", estado=" + estado +
-                ", equiposIds=" + equiposIds +
                 '}';
     }
 }

@@ -93,25 +93,4 @@ public class TorneoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
-    
-    @PostMapping("/{torneoId}/equipos/{equipoId}")
-    public ResponseEntity<Torneo> agregarEquipo(@PathVariable Long torneoId, @PathVariable Long equipoId) {
-        try {
-            Torneo torneo = torneoUseCase.agregarEquipo(torneoId, equipoId);
-            return new ResponseEntity<>(torneo, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-    }
-    
-    @DeleteMapping("/{torneoId}/equipos/{equipoId}")
-    public ResponseEntity<Torneo> removerEquipo(@PathVariable Long torneoId, @PathVariable Long equipoId) {
-        try {
-            Torneo torneo = torneoUseCase.removerEquipo(torneoId, equipoId);
-            return new ResponseEntity<>(torneo, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-    }
 }
