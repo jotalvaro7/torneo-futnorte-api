@@ -1,0 +1,323 @@
+{
+	"info": {
+		"_postman_id": "futnorte-api-collection",
+		"name": "Futnorte API",
+		"description": "Colección de endpoints para la API de gestión de torneos de fútbol",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/api",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Torneos",
+			"item": [
+				{
+					"name": "Crear Torneo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Copa Libertadores 2024\",\n    \"descripcion\": \"Torneo internacional de clubes\",\n    \"fechaInicio\": \"2024-02-01T18:00:00\",\n    \"fechaFin\": \"2024-11-30T22:00:00\",\n    \"estado\": \"PLANIFICADO\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/torneos",
+							"host": ["{{baseUrl}}"],
+							"path": ["torneos"]
+						}
+					}
+				},
+				{
+					"name": "Listar Todos los Torneos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/torneos",
+							"host": ["{{baseUrl}}"],
+							"path": ["torneos"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Torneo por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/torneos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["torneos", "1"]
+						}
+					}
+				},
+				{
+					"name": "Actualizar Torneo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Liga Premier 2024 - Actualizada\",\n    \"descripcion\": \"Torneo actualizado con nuevas reglas\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/torneos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["torneos", "1"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar Torneo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/torneos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["torneos", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Equipos",
+			"item": [
+				{
+					"name": "Crear Equipo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Manchester United\",\n    \"entrenador\": \"Erik ten Hag\",\n    \"torneoId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/equipos",
+							"host": ["{{baseUrl}}"],
+							"path": ["equipos"]
+						}
+					}
+				},
+				{
+					"name": "Listar Todos los Equipos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/equipos",
+							"host": ["{{baseUrl}}"],
+							"path": ["equipos"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Equipo por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/equipos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["equipos", "1"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Equipos por Torneo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/equipos/torneo/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["equipos", "torneo", "1"]
+						}
+					}
+				},
+				{
+					"name": "Actualizar Equipo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Real Madrid FC - Actualizado\",\n    \"entrenador\": \"Carlo Ancelotti\",\n    \"puntos\": 50\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/equipos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["equipos", "1"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar Equipo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/equipos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["equipos", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Jugadores",
+			"item": [
+				{
+					"name": "Crear Jugador",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Cristiano\",\n    \"apellido\": \"Ronaldo\",\n    \"identificacion\": \"CR7001\",\n    \"nacionalidad\": \"Portuguesa\",\n    \"equipoId\": 1,\n    \"numeroGoles\": 15\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/jugadores",
+							"host": ["{{baseUrl}}"],
+							"path": ["jugadores"]
+						}
+					}
+				},
+				{
+					"name": "Listar Todos los Jugadores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/jugadores",
+							"host": ["{{baseUrl}}"],
+							"path": ["jugadores"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Jugador por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/jugadores/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["jugadores", "1"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Jugadores por Equipo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/jugadores/equipo/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["jugadores", "equipo", "1"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Jugador por Identificación",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/jugadores/identificacion/12345001",
+							"host": ["{{baseUrl}}"],
+							"path": ["jugadores", "identificacion", "12345001"]
+						}
+					}
+				},
+				{
+					"name": "Actualizar Jugador",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Vinícius Jr.\",\n    \"nacionalidad\": \"Brasileña\",\n    \"numeroGoles\": 12\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/jugadores/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["jugadores", "1"]
+						}
+					}
+				},
+				{
+					"name": "Cambiar Equipo del Jugador",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"equipoId\": 2\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/jugadores/1/cambiar-equipo",
+							"host": ["{{baseUrl}}"],
+							"path": ["jugadores", "1", "cambiar-equipo"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar Jugador",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/jugadores/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["jugadores", "1"]
+						}
+					}
+				}
+			]
+		}
+	]
+}

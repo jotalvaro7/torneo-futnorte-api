@@ -44,9 +44,6 @@ public class EquipoService implements EquipoUseCase {
         if (equipo.getTorneoId() != null) {
             equipoExistente.setTorneoId(equipo.getTorneoId());
         }
-        if (equipo.getJugadoresIds() != null) {
-            equipoExistente.setJugadoresIds(equipo.getJugadoresIds());
-        }
 
         Equipo equipoNuevo = new Equipo();
         

@@ -16,7 +16,6 @@ public class EquipoMapper {
         entity.setNombre(equipo.getNombre());
         entity.setEntrenador(equipo.getEntrenador());
         entity.setTorneoId(equipo.getTorneoId());
-        entity.setJugadoresIds(equipo.getJugadoresIds());
         entity.setPuntos(equipo.getPuntos());
         entity.setPartidosJugados(equipo.getPartidosJugados());
         entity.setPartidosGanados(equipo.getPartidosGanados());
@@ -38,7 +37,6 @@ public class EquipoMapper {
         equipo.setNombre(entity.getNombre());
         equipo.setEntrenador(entity.getEntrenador());
         equipo.setTorneoId(entity.getTorneoId());
-        equipo.setJugadoresIds(entity.getJugadoresIds());
         equipo.setPuntos(entity.getPuntos());
         equipo.setPartidosJugados(entity.getPartidosJugados());
         equipo.setPartidosGanados(entity.getPartidosGanados());
