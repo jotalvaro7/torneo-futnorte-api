@@ -318,6 +318,156 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Enfrentamientos",
+			"item": [
+				{
+					"name": "Crear Enfrentamiento",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"torneoId\": 1,\n    \"equipoLocalId\": 1,\n    \"equipoVisitanteId\": 2,\n    \"fechaHora\": \"2024-03-15T20:00:00\",\n    \"cancha\": \"Estadio Santiago Bernabéu\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/enfrentamientos",
+							"host": ["{{baseUrl}}"],
+							"path": ["enfrentamientos"]
+						}
+					}
+				},
+				{
+					"name": "Buscar Enfrentamiento por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/enfrentamientos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["enfrentamientos", "1"]
+						}
+					}
+				},
+				{
+					"name": "Listar Enfrentamientos por Torneo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/enfrentamientos/torneo/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["enfrentamientos", "torneo", "1"]
+						}
+					}
+				},
+				{
+					"name": "Listar Enfrentamientos por Equipo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/enfrentamientos/equipo/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["enfrentamientos", "equipo", "1"]
+						}
+					}
+				},
+				{
+					"name": "Listar Enfrentamientos por Fecha",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/enfrentamientos/fecha?fechaInicio=2024-03-01T00:00:00&fechaFin=2024-03-31T23:59:59",
+							"host": ["{{baseUrl}}"],
+							"path": ["enfrentamientos", "fecha"],
+							"query": [
+								{
+									"key": "fechaInicio",
+									"value": "2024-03-01T00:00:00"
+								},
+								{
+									"key": "fechaFin",
+									"value": "2024-03-31T23:59:59"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Actualizar Enfrentamiento",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"fechaHora\": \"2024-03-16T21:00:00\",\n    \"cancha\": \"Camp Nou\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/enfrentamientos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["enfrentamientos", "1"]
+						}
+					}
+				},
+				{
+					"name": "Registrar Resultado",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"golesLocal\": 2,\n    \"golesVisitante\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/enfrentamientos/1/resultado",
+							"host": ["{{baseUrl}}"],
+							"path": ["enfrentamientos", "1", "resultado"]
+						}
+					}
+				},
+				{
+					"name": "Cancelar Enfrentamiento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/enfrentamientos/1/cancelar",
+							"host": ["{{baseUrl}}"],
+							"path": ["enfrentamientos", "1", "cancelar"]
+						}
+					}
+				},
+				{
+					"name": "Eliminar Enfrentamiento",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/enfrentamientos/1",
+							"host": ["{{baseUrl}}"],
+							"path": ["enfrentamientos", "1"]
+						}
+					}
+				}
+			]
 		}
 	]
 }
