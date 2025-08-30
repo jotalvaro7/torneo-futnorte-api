@@ -203,3 +203,42 @@ INSERT INTO jugadores (nombre, apellido, identificacion, nacionalidad, equipo_id
 ('Gerardo', 'Zamora', '12345141', 'Colombiana', 13, 1),
 ('Salvador', 'Trejo', '12345142', 'Colombiana', 13, 0),
 ('Rafael', 'Arroyo', '12345143', 'Colombiana', 13, 0);
+
+-- Insertar enfrentamientos de prueba
+
+-- Enfrentamientos del torneo Liga Premier 2024 (torneo_id = 1)
+INSERT INTO enfrentamientos (torneo_id, equipo_local_id, equipo_visitante_id, fecha_hora, cancha, estado, goles_local, goles_visitante) VALUES
+(1, 1, 2, '2024-03-15T20:00:00', 'Estadio Santiago Bernabéu', 'FINALIZADO', 2, 1),
+(1, 3, 4, '2024-03-15T18:00:00', 'Metropolitano', 'FINALIZADO', 1, 1),
+(1, 5, 1, '2024-03-22T21:00:00', 'Ramón Sánchez-Pizjuán', 'FINALIZADO', 0, 3),
+(1, 2, 3, '2024-03-22T19:00:00', 'Camp Nou', 'FINALIZADO', 2, 0),
+(1, 4, 5, '2024-03-29T20:30:00', 'Mestalla', 'FINALIZADO', 1, 0),
+(1, 1, 3, '2024-04-05T21:00:00', 'Estadio Santiago Bernabéu', 'PROGRAMADO', null, null),
+(1, 2, 4, '2024-04-05T19:00:00', 'Camp Nou', 'PROGRAMADO', null, null),
+(1, 5, 3, '2024-04-12T20:00:00', 'Ramón Sánchez-Pizjuán', 'PROGRAMADO', null, null),
+(1, 4, 1, '2024-04-12T18:00:00', 'Mestalla', 'PROGRAMADO', null, null),
+(1, 2, 5, '2024-04-19T21:30:00', 'Camp Nou', 'PROGRAMADO', null, null);
+
+-- Enfrentamientos del torneo Copa América Junior (torneo_id = 2)
+INSERT INTO enfrentamientos (torneo_id, equipo_local_id, equipo_visitante_id, fecha_hora, cancha, estado, goles_local, goles_visitante) VALUES
+(2, 6, 7, '2024-06-08T16:00:00', 'Estadio Juvenil Norte', 'PROGRAMADO', null, null),
+(2, 8, 9, '2024-06-08T14:00:00', 'Campo Municipal Sur', 'PROGRAMADO', null, null),
+(2, 6, 8, '2024-06-15T16:00:00', 'Estadio Juvenil Norte', 'PROGRAMADO', null, null),
+(2, 7, 9, '2024-06-15T14:00:00', 'Coliseo Deportivo', 'PROGRAMADO', null, null),
+(2, 6, 9, '2024-06-22T17:00:00', 'Estadio Juvenil Norte', 'PROGRAMADO', null, null),
+(2, 7, 8, '2024-06-22T15:00:00', 'Campo Municipal Sur', 'PROGRAMADO', null, null);
+
+-- Enfrentamientos del Torneo Regional Norte (torneo_id = 3)
+INSERT INTO enfrentamientos (torneo_id, equipo_local_id, equipo_visitante_id, fecha_hora, cancha, estado, goles_local, goles_visitante) VALUES
+(3, 10, 11, '2024-02-25T15:00:00', 'Estadio Regional Norte', 'FINALIZADO', 3, 1),
+(3, 12, 13, '2024-02-25T17:00:00', 'Campo Cordillera', 'FINALIZADO', 2, 0),
+(3, 10, 12, '2024-03-03T16:00:00', 'Estadio Regional Norte', 'FINALIZADO', 1, 1),
+(3, 11, 13, '2024-03-03T18:00:00', 'Polideportivo Montaña', 'FINALIZADO', 2, 1),
+(3, 10, 13, '2024-03-10T15:30:00', 'Estadio Regional Norte', 'FINALIZADO', 4, 0),
+(3, 11, 12, '2024-03-10T17:30:00', 'Polideportivo Montaña', 'FINALIZADO', 1, 2),
+(3, 11, 10, '2024-03-17T16:00:00', 'Polideportivo Montaña', 'PROGRAMADO', null, null),
+(3, 13, 12, '2024-03-17T18:00:00', 'Campo Nevados', 'PROGRAMADO', null, null),
+(3, 12, 10, '2024-03-24T15:00:00', 'Campo Cordillera', 'PROGRAMADO', null, null),
+(3, 13, 11, '2024-03-24T17:00:00', 'Campo Nevados', 'PROGRAMADO', null, null),
+(3, 13, 10, '2024-03-31T16:30:00', 'Campo Nevados', 'PROGRAMADO', null, null),
+(3, 12, 11, '2024-03-31T18:30:00', 'Campo Cordillera', 'PROGRAMADO', null, null);
