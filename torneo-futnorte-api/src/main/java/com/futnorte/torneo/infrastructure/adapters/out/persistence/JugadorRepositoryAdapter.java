@@ -75,4 +75,12 @@ public class JugadorRepositoryAdapter implements JugadorRepositoryPort {
     public void eliminarPorEquipoId(Long equipoId) {
         jugadorJpaRepository.deleteByEquipoId(equipoId);
     }
+    
+    @Override
+    public List<Jugador> buscarGoleadoresPorTorneo(Long torneoId) {
+        return jugadorJpaRepository.findGoleadoresByTorneoId(torneoId)
+                .stream()
+                .map(jugadorMapper::toDomain)
+                .collect(Collectors.toList());
+    }
 }

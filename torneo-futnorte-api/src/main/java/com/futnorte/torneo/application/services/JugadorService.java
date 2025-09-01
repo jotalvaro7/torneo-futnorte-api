@@ -117,4 +117,9 @@ public class JugadorService implements JugadorUseCase {
         
         return jugadorRepositoryPort.guardar(jugador);
     }
+    
+    @Override
+    public List<Jugador> obtenerGoleadoresPorTorneo(Long torneoId) {
+        return jugadorRepositoryPort.buscarGoleadoresPorTorneo(torneoId);
+    }
 }

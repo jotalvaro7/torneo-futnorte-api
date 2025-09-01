@@ -1,22 +1,28 @@
 package com.futnorte.torneo.infrastructure.adapters.in.web;
 
+import com.futnorte.torneo.domain.entities.Equipo;
 import com.futnorte.torneo.domain.entities.Jugador;
+import com.futnorte.torneo.domain.ports.in.EquipoUseCase;
 import com.futnorte.torneo.domain.ports.in.JugadorUseCase;
+import com.futnorte.torneo.infrastructure.adapters.in.web.dto.GoleadorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/jugadores")
 public class JugadorController {
     
     private final JugadorUseCase jugadorUseCase;
+    private final EquipoUseCase equipoUseCase;
     
-    public JugadorController(JugadorUseCase jugadorUseCase) {
+    public JugadorController(JugadorUseCase jugadorUseCase, EquipoUseCase equipoUseCase) {
         this.jugadorUseCase = jugadorUseCase;
+        this.equipoUseCase = equipoUseCase;
     }
     
     @PostMapping
@@ -81,6 +87,17 @@ public class JugadorController {
         }
     }
     
+    @GetMapping("/goleadores/torneo/{torneoId}")
+    public ResponseEntity<List<GoleadorResponse>> obtenerGoleadoresPorTorneo(@PathVariable Long torneoId) {
+        List<Jugador> jugadores = jugadorUseCase.obtenerGoleadoresPorTorneo(torneoId);
+        
+        List<GoleadorResponse> goleadores = jugadores.stream()
+                .map(this::toGoleadorResponse)
+                .collect(Collectors.toList());
+                
+        return new ResponseEntity<>(goleadores, HttpStatus.OK);
+    }
+    
     @PutMapping("/{id}/cambiar-equipo")
     public ResponseEntity<Jugador> cambiarEquipo(@PathVariable Long id, @RequestBody Map<String, Long> request) {
         try {
@@ -90,5 +107,19 @@ public class JugadorController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+    }
+    
+    private GoleadorResponse toGoleadorResponse(Jugador jugador) {
+        Equipo equipo = equipoUseCase.buscarEquipoPorId(jugador.getEquipoId());
+        
+        return new GoleadorResponse(
+                jugador.getId(),
+                jugador.getNombre(),
+                jugador.getApellido(),
+                jugador.getIdentificacion(),
+                jugador.getNacionalidad(),
+                jugador.getNumeroGoles(),
+                equipo.getNombre()
+        );
     }
 }

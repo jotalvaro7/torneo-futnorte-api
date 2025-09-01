@@ -1,12 +1,12 @@
 package com.futnorte.torneo.infrastructure.adapters.in.web;
 
 import com.futnorte.torneo.domain.entities.Enfrentamiento;
-import com.futnorte.torneo.domain.entities.Equipo;
 import com.futnorte.torneo.domain.ports.in.EnfrentamientoUseCase;
 import com.futnorte.torneo.domain.ports.in.EquipoUseCase;
 import com.futnorte.torneo.infrastructure.adapters.in.web.dto.ActualizarEnfrentamientoRequest;
 import com.futnorte.torneo.infrastructure.adapters.in.web.dto.CrearEnfrentamientoRequest;
 import com.futnorte.torneo.infrastructure.adapters.in.web.dto.EnfrentamientoResponse;
+import com.futnorte.torneo.infrastructure.adapters.in.web.dto.RegistrarGolesJugadorRequest;
 import com.futnorte.torneo.infrastructure.adapters.in.web.dto.RegistrarResultadoRequest;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -115,6 +115,24 @@ public class EnfrentamientoController {
             );
             EnfrentamientoResponse response = toResponse(enfrentamiento);
             return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    @PostMapping("/{id}/goles-jugador")
+    public ResponseEntity<Void> registrarGolesJugador(
+            @PathVariable Long id, 
+            @Valid @RequestBody RegistrarGolesJugadorRequest request) {
+        try {
+            enfrentamientoUseCase.registrarGolesJugador(
+                    id, 
+                    request.getJugadorId(), 
+                    request.getCantidadGoles()
+            );
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (IllegalStateException e) {
