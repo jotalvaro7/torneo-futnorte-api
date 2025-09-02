@@ -1,5 +1,7 @@
 package com.futnorte.torneo.domain.entities;
 
+import com.futnorte.torneo.domain.exceptions.BusinessRuleException;
+import com.futnorte.torneo.domain.exceptions.ValidationException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -33,16 +35,16 @@ public class Enfrentamiento {
     public void registrarResultado(int golesLocal, int golesVisitante, 
                                   Equipo equipoLocal, Equipo equipoVisitante) {
         if (this.estado != EstadoEnfrentamiento.PROGRAMADO) {
-            throw new IllegalStateException("Solo se puede registrar resultado en enfrentamientos programados");
+            throw new BusinessRuleException("Solo se puede registrar resultado en enfrentamientos programados");
         }
         
         if (golesLocal < 0 || golesVisitante < 0) {
-            throw new IllegalArgumentException("Los goles no pueden ser negativos");
+            throw new ValidationException("goles", "no pueden ser negativos");
         }
         
         if (!equipoLocal.getId().equals(this.equipoLocalId) || 
             !equipoVisitante.getId().equals(this.equipoVisitanteId)) {
-            throw new IllegalArgumentException("Los equipos no coinciden con el enfrentamiento");
+            throw new ValidationException("equipos", "no coinciden con el enfrentamiento");
         }
         
         this.golesLocal = golesLocal;
@@ -63,7 +65,7 @@ public class Enfrentamiento {
     
     public void actualizarDetalles(LocalDateTime fechaHora, String cancha) {
         if (this.estado == EstadoEnfrentamiento.FINALIZADO) {
-            throw new IllegalStateException("No se puede modificar un enfrentamiento finalizado");
+            throw new BusinessRuleException("No se puede modificar un enfrentamiento finalizado");
         }
         this.fechaHora = fechaHora;
         this.cancha = cancha;
@@ -71,26 +73,26 @@ public class Enfrentamiento {
     
     public void cancelar() {
         if (this.estado == EstadoEnfrentamiento.FINALIZADO) {
-            throw new IllegalStateException("No se puede cancelar un enfrentamiento finalizado");
+            throw new BusinessRuleException("No se puede cancelar un enfrentamiento finalizado");
         }
         this.estado = EstadoEnfrentamiento.CANCELADO;
     }
     
     public void validarEnfrentamiento() {
         if (this.torneoId == null) {
-            throw new IllegalArgumentException("El enfrentamiento debe estar asociado a un torneo");
+            throw new ValidationException("torneoId", "el enfrentamiento debe estar asociado a un torneo");
         }
         if (this.equipoLocalId == null || this.equipoVisitanteId == null) {
-            throw new IllegalArgumentException("Debe especificar ambos equipos");
+            throw new ValidationException("equipos", "debe especificar ambos equipos");
         }
         if (Objects.equals(this.equipoLocalId, this.equipoVisitanteId)) {
-            throw new IllegalArgumentException("Un equipo no puede enfrentarse a sí mismo");
+            throw new ValidationException("equipos", "un equipo no puede enfrentarse a sí mismo");
         }
         if (this.fechaHora == null) {
-            throw new IllegalArgumentException("Debe especificar fecha y hora del enfrentamiento");
+            throw new ValidationException("fechaHora", "debe especificar fecha y hora del enfrentamiento");
         }
         if (this.cancha == null || this.cancha.trim().isEmpty()) {
-            throw new IllegalArgumentException("Debe especificar la cancha");
+            throw new ValidationException("cancha", "debe especificar la cancha");
         }
     }
     

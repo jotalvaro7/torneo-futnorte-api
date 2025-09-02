@@ -1,6 +1,8 @@
 package com.futnorte.torneo.application.services;
 
 import com.futnorte.torneo.domain.entities.Jugador;
+import com.futnorte.torneo.domain.exceptions.DuplicateEntityException;
+import com.futnorte.torneo.domain.exceptions.EntityNotFoundException;
 import com.futnorte.torneo.domain.ports.in.JugadorUseCase;
 import com.futnorte.torneo.domain.ports.out.JugadorRepositoryPort;
 import com.futnorte.torneo.domain.ports.out.EquipoRepositoryPort;
@@ -24,11 +26,11 @@ public class JugadorService implements JugadorUseCase {
         jugador.validarJugador();
         
         if (!equipoRepositoryPort.existePorId(jugador.getEquipoId())) {
-            throw new IllegalArgumentException("El equipo especificado no existe");
+            throw new EntityNotFoundException("Equipo", jugador.getEquipoId());
         }
         
         if (jugadorRepositoryPort.existePorIdentificacion(jugador.getIdentificacion())) {
-            throw new IllegalArgumentException("Ya existe un jugador con esa identificación");
+            throw new DuplicateEntityException("Ya existe un jugador con esa identificación");
         }
         
         return jugadorRepositoryPort.guardar(jugador);
@@ -37,7 +39,7 @@ public class JugadorService implements JugadorUseCase {
     @Override
     public Jugador actualizarJugador(Long id, Jugador jugador) {
         if (!jugadorRepositoryPort.existePorId(id)) {
-            throw new IllegalArgumentException("El jugador no existe");
+            throw new EntityNotFoundException("Jugador", id);
         }
         
         Jugador jugadorExistente = buscarJugadorPorId(id);
@@ -50,13 +52,13 @@ public class JugadorService implements JugadorUseCase {
         }
         if (jugador.getIdentificacion() != null && !jugador.getIdentificacion().equals(jugadorExistente.getIdentificacion())) {
             if (jugadorRepositoryPort.existePorIdentificacion(jugador.getIdentificacion())) {
-                throw new IllegalArgumentException("Ya existe un jugador con esa identificación");
+                throw new DuplicateEntityException("Ya existe un jugador con esa identificación");
             }
             jugadorExistente.setIdentificacion(jugador.getIdentificacion());
         }
         if (jugador.getEquipoId() != null) {
             if (!equipoRepositoryPort.existePorId(jugador.getEquipoId())) {
-                throw new IllegalArgumentException("El equipo especificado no existe");
+                throw new EntityNotFoundException("Equipo", jugador.getEquipoId());
             }
             jugadorExistente.setEquipoId(jugador.getEquipoId());
         }
@@ -74,7 +76,7 @@ public class JugadorService implements JugadorUseCase {
     @Override
     public Jugador buscarJugadorPorId(Long id) {
         return jugadorRepositoryPort.buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("El jugador no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Jugador", id));
     }
     
     @Override
@@ -90,13 +92,13 @@ public class JugadorService implements JugadorUseCase {
     @Override
     public Jugador buscarJugadorPorIdentificacion(String identificacion) {
         return jugadorRepositoryPort.buscarPorIdentificacion(identificacion)
-                .orElseThrow(() -> new IllegalArgumentException("No se encontró jugador con esa identificación"));
+                .orElseThrow(() -> new EntityNotFoundException("Jugador", identificacion));
     }
     
     @Override
     public void eliminarJugador(Long id) {
         if (!jugadorRepositoryPort.existePorId(id)) {
-            throw new IllegalArgumentException("El jugador no existe");
+            throw new EntityNotFoundException("Jugador", id);
         }
         jugadorRepositoryPort.eliminarPorId(id);
     }
@@ -109,7 +111,7 @@ public class JugadorService implements JugadorUseCase {
     @Override
     public Jugador cambiarEquipo(Long jugadorId, Long nuevoEquipoId) {
         if (!equipoRepositoryPort.existePorId(nuevoEquipoId)) {
-            throw new IllegalArgumentException("El nuevo equipo especificado no existe");
+            throw new EntityNotFoundException("Equipo", nuevoEquipoId);
         }
         
         Jugador jugador = buscarJugadorPorId(jugadorId);

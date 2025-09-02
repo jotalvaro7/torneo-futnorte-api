@@ -21,12 +21,8 @@ public class TorneoController {
     
     @PostMapping
     public ResponseEntity<Torneo> crearTorneo(@RequestBody Torneo torneo) {
-        try {
-            Torneo torneoCreado = torneoUseCase.crearTorneo(torneo);
-            return new ResponseEntity<>(torneoCreado, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        Torneo torneoCreado = torneoUseCase.crearTorneo(torneo);
+        return new ResponseEntity<>(torneoCreado, HttpStatus.CREATED);
     }
     
     @GetMapping("/{id}")
@@ -44,53 +40,31 @@ public class TorneoController {
     
     @PutMapping("/{id}")
     public ResponseEntity<Torneo> actualizarTorneo(@PathVariable Long id, @RequestBody Torneo torneo) {
-        try {
-            Torneo torneoActualizado = torneoUseCase.actualizarTorneo(id, torneo);
-            return new ResponseEntity<>(torneoActualizado, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
+        Torneo torneoActualizado = torneoUseCase.actualizarTorneo(id, torneo);
+        return new ResponseEntity<>(torneoActualizado, HttpStatus.OK);
     }
     
     @PostMapping("/{id}/iniciar")
     public ResponseEntity<Torneo> iniciarTorneo(@PathVariable Long id) {
-        try {
-            Torneo torneo = torneoUseCase.iniciarTorneo(id);
-            return new ResponseEntity<>(torneo, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        Torneo torneo = torneoUseCase.iniciarTorneo(id);
+        return new ResponseEntity<>(torneo, HttpStatus.OK);
     }
 
     @PostMapping("/{id}/cancelar")
     public ResponseEntity<Torneo> cancelarTorneo(@PathVariable Long id) {
-        try {
-            Torneo torneo = torneoUseCase.cancelarTorneo(id);
-            return new ResponseEntity<>(torneo, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        Torneo torneo = torneoUseCase.cancelarTorneo(id);
+        return new ResponseEntity<>(torneo, HttpStatus.OK);
     }
 
     @PostMapping("/{id}/finalizar")
     public ResponseEntity<Torneo> finalizarTorneo(@PathVariable Long id) {
-        try {
-            Torneo torneo = torneoUseCase.finalizarTorneo(id);
-            return new ResponseEntity<>(torneo, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        Torneo torneo = torneoUseCase.finalizarTorneo(id);
+        return new ResponseEntity<>(torneo, HttpStatus.OK);
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarTorneo(@PathVariable Long id) {
-        try {
-            torneoUseCase.eliminarTorneo(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        torneoUseCase.eliminarTorneo(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

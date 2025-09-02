@@ -20,22 +20,14 @@ public class EquipoController {
     
     @PostMapping
     public ResponseEntity<Equipo> crearEquipo(@RequestBody Equipo equipo) {
-        try {
-            Equipo equipoCreado = equipoUseCase.crearEquipo(equipo);
-            return new ResponseEntity<>(equipoCreado, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Equipo equipoCreado = equipoUseCase.crearEquipo(equipo);
+        return new ResponseEntity<>(equipoCreado, HttpStatus.CREATED);
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<Equipo> buscarEquipoPorId(@PathVariable Long id) {
-        try {
-            Equipo equipo = equipoUseCase.buscarEquipoPorId(id);
-            return new ResponseEntity<>(equipo, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Equipo equipo = equipoUseCase.buscarEquipoPorId(id);
+        return new ResponseEntity<>(equipo, HttpStatus.OK);
     }
     
     @GetMapping
@@ -46,22 +38,14 @@ public class EquipoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Equipo> actualizarEquipo(@PathVariable Long id, @RequestBody Equipo equipo) {
-        try {
-            Equipo equipoActualizado = equipoUseCase.actualizarEquipo(id, equipo);
-            return new ResponseEntity<>(equipoActualizado, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Equipo equipoActualizado = equipoUseCase.actualizarEquipo(id, equipo);
+        return new ResponseEntity<>(equipoActualizado, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarEquipo(@PathVariable Long id) {
-        try {
-            equipoUseCase.eliminarEquipo(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        equipoUseCase.eliminarEquipo(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/torneo/{torneoId}")
