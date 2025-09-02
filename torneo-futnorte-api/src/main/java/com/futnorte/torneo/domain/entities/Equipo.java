@@ -1,5 +1,6 @@
 package com.futnorte.torneo.domain.entities;
 
+import com.futnorte.torneo.domain.exceptions.ValidationException;
 import java.util.Objects;
 
 public class Equipo {
@@ -64,13 +65,13 @@ public class Equipo {
 
     public void validarEquipo() {
         if (this.nombre == null || this.nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del equipo es obligatorio");
+            throw new ValidationException("nombre", "es obligatorio");
         }
         if (this.entrenador == null || this.entrenador.trim().isEmpty()) {
-            throw new IllegalArgumentException("El entrenador del equipo es obligatorio");
+            throw new ValidationException("entrenador", "es obligatorio");
         }
         if (this.torneoId == null) {
-            throw new IllegalArgumentException("El equipo debe estar asociado a un torneo");
+            throw new ValidationException("torneoId", "el equipo debe estar asociado a un torneo");
         }
     }
 

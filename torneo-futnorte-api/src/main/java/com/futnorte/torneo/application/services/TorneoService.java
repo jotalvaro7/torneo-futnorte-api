@@ -1,6 +1,9 @@
 package com.futnorte.torneo.application.services;
 
 import com.futnorte.torneo.domain.entities.Torneo;
+import com.futnorte.torneo.domain.exceptions.DuplicateEntityException;
+import com.futnorte.torneo.domain.exceptions.EntityNotFoundException;
+import com.futnorte.torneo.domain.exceptions.ValidationException;
 import com.futnorte.torneo.domain.ports.in.TorneoUseCase;
 import com.futnorte.torneo.domain.ports.out.TorneoRepositoryPort;
 import com.futnorte.torneo.domain.ports.out.EquipoRepositoryPort;
@@ -23,12 +26,12 @@ public class TorneoService implements TorneoUseCase {
     @Override
     public Torneo crearTorneo(Torneo torneo) {
         if (torneo.getNombre() == null || torneo.getNombre().trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre del torneo es obligatorio");
+            throw new ValidationException("El nombre del torneo es obligatorio");
         }
 
         Optional<Torneo> torneoExistente = torneoRepository.findByNombre(torneo.getNombre());
         if (torneoExistente.isPresent()) {
-            throw new IllegalArgumentException("Ya existe un torneo con ese nombre");
+            throw new DuplicateEntityException("Ya existe un torneo con ese nombre");
         }
 
         return torneoRepository.save(torneo);
@@ -65,7 +68,7 @@ public class TorneoService implements TorneoUseCase {
                     // Estos se manejan por endpoints específicos
                     return torneoRepository.save(torneoExistente);
                 })
-                .orElseThrow(() -> new RuntimeException("Torneo no encontrado con ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Torneo", id));
     }
 
     @Override
@@ -75,13 +78,13 @@ public class TorneoService implements TorneoUseCase {
                     torneo.cancelarTorneo();
                     return torneoRepository.save(torneo);
                 })
-                .orElseThrow(() -> new RuntimeException("Torneo no encontrado con ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Torneo", id));
     }
 
     @Override
     public void eliminarTorneo(Long id) {
         Torneo torneo = torneoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Torneo no encontrado con ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Torneo", id));
 
         torneo.validarEliminacion();
         torneoRepository.deleteById(id);
@@ -95,7 +98,7 @@ public class TorneoService implements TorneoUseCase {
                     torneo.iniciarTorneo(cantidadEquipos);
                     return torneoRepository.save(torneo);
                 })
-                .orElseThrow(() -> new RuntimeException("Torneo no encontrado con ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Torneo", id));
     }
 
     @Override
@@ -105,6 +108,6 @@ public class TorneoService implements TorneoUseCase {
                     torneo.finalizarTorneo();
                     return torneoRepository.save(torneo);
                 })
-                .orElseThrow(() -> new RuntimeException("Torneo no encontrado con ID: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Torneo", id));
     }
 }

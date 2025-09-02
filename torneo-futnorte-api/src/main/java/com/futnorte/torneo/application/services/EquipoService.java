@@ -1,6 +1,8 @@
 package com.futnorte.torneo.application.services;
 
 import com.futnorte.torneo.domain.entities.Equipo;
+import com.futnorte.torneo.domain.exceptions.DuplicateEntityException;
+import com.futnorte.torneo.domain.exceptions.EntityNotFoundException;
 import com.futnorte.torneo.domain.ports.in.EquipoUseCase;
 import com.futnorte.torneo.domain.ports.out.EquipoRepositoryPort;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ public class EquipoService implements EquipoUseCase {
         equipo.validarEquipo();
         
         if (equipoRepositoryPort.existePorNombreYTorneoId(equipo.getNombre(), equipo.getTorneoId())) {
-            throw new IllegalArgumentException("Ya existe un equipo con ese nombre en el torneo");
+            throw new DuplicateEntityException("Ya existe un equipo con ese nombre en el torneo");
         }
         
         return equipoRepositoryPort.guardar(equipo);
@@ -30,7 +32,7 @@ public class EquipoService implements EquipoUseCase {
     @Override
     public Equipo actualizarEquipo(Long id, Equipo equipo) {
         if (!equipoRepositoryPort.existePorId(id)) {
-            throw new IllegalArgumentException("El equipo no existe");
+            throw new EntityNotFoundException("Equipo", id);
         }
         
         Equipo equipoExistente = buscarEquipoPorId(id);
@@ -77,7 +79,7 @@ public class EquipoService implements EquipoUseCase {
     @Override
     public Equipo buscarEquipoPorId(Long id) {
         return equipoRepositoryPort.buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("El equipo no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Equipo", id));
     }
     
     @Override
@@ -93,7 +95,7 @@ public class EquipoService implements EquipoUseCase {
     @Override
     public void eliminarEquipo(Long id) {
         if (!equipoRepositoryPort.existePorId(id)) {
-            throw new IllegalArgumentException("El equipo no existe");
+            throw new EntityNotFoundException("Equipo", id);
         }
         equipoRepositoryPort.eliminarPorId(id);
     }

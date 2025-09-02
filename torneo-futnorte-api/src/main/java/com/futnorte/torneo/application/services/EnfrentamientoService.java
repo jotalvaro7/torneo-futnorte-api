@@ -4,6 +4,9 @@ import com.futnorte.torneo.domain.entities.Enfrentamiento;
 import com.futnorte.torneo.domain.entities.Equipo;
 import com.futnorte.torneo.domain.entities.Jugador;
 import com.futnorte.torneo.domain.entities.Torneo;
+import com.futnorte.torneo.domain.exceptions.BusinessRuleException;
+import com.futnorte.torneo.domain.exceptions.EntityNotFoundException;
+import com.futnorte.torneo.domain.exceptions.ValidationException;
 import com.futnorte.torneo.domain.ports.in.EnfrentamientoUseCase;
 import com.futnorte.torneo.domain.ports.out.EnfrentamientoRepositoryPort;
 import com.futnorte.torneo.domain.ports.out.EquipoRepositoryPort;
@@ -40,17 +43,17 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
                                             LocalDateTime fechaHora, String cancha) {
         
         Torneo torneo = torneoRepository.findById(torneoId)
-                .orElseThrow(() -> new IllegalArgumentException("El torneo no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Torneo", torneoId));
         
         Equipo equipoLocal = equipoRepository.buscarPorId(equipoLocalId)
-                .orElseThrow(() -> new IllegalArgumentException("El equipo local no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Equipo", equipoLocalId));
         
         Equipo equipoVisitante = equipoRepository.buscarPorId(equipoVisitanteId)
-                .orElseThrow(() -> new IllegalArgumentException("El equipo visitante no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Equipo", equipoVisitanteId));
         
         if (!equipoLocal.getTorneoId().equals(torneoId) || 
             !equipoVisitante.getTorneoId().equals(torneoId)) {
-            throw new IllegalArgumentException("Ambos equipos deben pertenecer al torneo especificado");
+            throw new ValidationException("Ambos equipos deben pertenecer al torneo especificado");
         }
         
         Enfrentamiento enfrentamiento = new Enfrentamiento(torneoId, equipoLocalId, equipoVisitanteId, 
@@ -63,7 +66,7 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
     @Override
     public Enfrentamiento actualizarEnfrentamiento(Long enfrentamientoId, LocalDateTime fechaHora, String cancha) {
         Enfrentamiento enfrentamiento = enfrentamientoRepository.findById(enfrentamientoId)
-                .orElseThrow(() -> new IllegalArgumentException("El enfrentamiento no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Enfrentamiento", enfrentamientoId));
         
         enfrentamiento.actualizarDetalles(fechaHora, cancha);
         
@@ -73,13 +76,13 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
     @Override
     public Enfrentamiento registrarResultado(Long enfrentamientoId, int golesLocal, int golesVisitante) {
         Enfrentamiento enfrentamiento = enfrentamientoRepository.findById(enfrentamientoId)
-                .orElseThrow(() -> new IllegalArgumentException("El enfrentamiento no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Enfrentamiento", enfrentamientoId));
         
         Equipo equipoLocal = equipoRepository.buscarPorId(enfrentamiento.getEquipoLocalId())
-                .orElseThrow(() -> new IllegalArgumentException("El equipo local no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Equipo", enfrentamiento.getEquipoLocalId()));
         
         Equipo equipoVisitante = equipoRepository.buscarPorId(enfrentamiento.getEquipoVisitanteId())
-                .orElseThrow(() -> new IllegalArgumentException("El equipo visitante no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Equipo", enfrentamiento.getEquipoVisitanteId()));
         
         enfrentamiento.registrarResultado(golesLocal, golesVisitante, equipoLocal, equipoVisitante);
         
@@ -92,18 +95,18 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
     @Override
     public void registrarGolesJugador(Long enfrentamientoId, Long jugadorId, int cantidadGoles) {
         Enfrentamiento enfrentamiento = enfrentamientoRepository.findById(enfrentamientoId)
-                .orElseThrow(() -> new IllegalArgumentException("El enfrentamiento no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Enfrentamiento", enfrentamientoId));
         
         if (!enfrentamiento.estaFinalizado()) {
-            throw new IllegalStateException("Solo se pueden registrar goles en enfrentamientos finalizados");
+            throw new BusinessRuleException("Solo se pueden registrar goles en enfrentamientos finalizados");
         }
         
         Jugador jugador = jugadorRepository.buscarPorId(jugadorId)
-                .orElseThrow(() -> new IllegalArgumentException("El jugador no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Jugador", jugadorId));
         
         if (!jugador.getEquipoId().equals(enfrentamiento.getEquipoLocalId()) && 
             !jugador.getEquipoId().equals(enfrentamiento.getEquipoVisitanteId())) {
-            throw new IllegalArgumentException("El jugador debe pertenecer a uno de los equipos del enfrentamiento");
+            throw new ValidationException("El jugador debe pertenecer a uno de los equipos del enfrentamiento");
         }
         
         jugador.anotarGoles(cantidadGoles);
@@ -113,7 +116,7 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
     @Override
     public Enfrentamiento cancelarEnfrentamiento(Long enfrentamientoId) {
         Enfrentamiento enfrentamiento = enfrentamientoRepository.findById(enfrentamientoId)
-                .orElseThrow(() -> new IllegalArgumentException("El enfrentamiento no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Enfrentamiento", enfrentamientoId));
         
         enfrentamiento.cancelar();
         
@@ -147,10 +150,10 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
     @Override
     public void eliminarEnfrentamiento(Long enfrentamientoId) {
         Enfrentamiento enfrentamiento = enfrentamientoRepository.findById(enfrentamientoId)
-                .orElseThrow(() -> new IllegalArgumentException("El enfrentamiento no existe"));
+                .orElseThrow(() -> new EntityNotFoundException("Enfrentamiento", enfrentamientoId));
         
         if (enfrentamiento.estaFinalizado()) {
-            throw new IllegalStateException("No se puede eliminar un enfrentamiento finalizado");
+            throw new BusinessRuleException("No se puede eliminar un enfrentamiento finalizado");
         }
         
         enfrentamientoRepository.deleteById(enfrentamientoId);

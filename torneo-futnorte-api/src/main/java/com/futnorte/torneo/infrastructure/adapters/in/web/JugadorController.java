@@ -27,22 +27,14 @@ public class JugadorController {
     
     @PostMapping
     public ResponseEntity<Jugador> crearJugador(@RequestBody Jugador jugador) {
-        try {
-            Jugador jugadorCreado = jugadorUseCase.crearJugador(jugador);
-            return new ResponseEntity<>(jugadorCreado, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Jugador jugadorCreado = jugadorUseCase.crearJugador(jugador);
+        return new ResponseEntity<>(jugadorCreado, HttpStatus.CREATED);
     }
     
     @GetMapping("/{id}")
     public ResponseEntity<Jugador> buscarJugadorPorId(@PathVariable Long id) {
-        try {
-            Jugador jugador = jugadorUseCase.buscarJugadorPorId(id);
-            return new ResponseEntity<>(jugador, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Jugador jugador = jugadorUseCase.buscarJugadorPorId(id);
+        return new ResponseEntity<>(jugador, HttpStatus.OK);
     }
     
     @GetMapping
@@ -53,22 +45,14 @@ public class JugadorController {
     
     @PutMapping("/{id}")
     public ResponseEntity<Jugador> actualizarJugador(@PathVariable Long id, @RequestBody Jugador jugador) {
-        try {
-            Jugador jugadorActualizado = jugadorUseCase.actualizarJugador(id, jugador);
-            return new ResponseEntity<>(jugadorActualizado, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Jugador jugadorActualizado = jugadorUseCase.actualizarJugador(id, jugador);
+        return new ResponseEntity<>(jugadorActualizado, HttpStatus.OK);
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarJugador(@PathVariable Long id) {
-        try {
-            jugadorUseCase.eliminarJugador(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        jugadorUseCase.eliminarJugador(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     @GetMapping("/equipo/{equipoId}")
@@ -79,12 +63,8 @@ public class JugadorController {
     
     @GetMapping("/identificacion/{identificacion}")
     public ResponseEntity<Jugador> buscarJugadorPorIdentificacion(@PathVariable String identificacion) {
-        try {
-            Jugador jugador = jugadorUseCase.buscarJugadorPorIdentificacion(identificacion);
-            return new ResponseEntity<>(jugador, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        Jugador jugador = jugadorUseCase.buscarJugadorPorIdentificacion(identificacion);
+        return new ResponseEntity<>(jugador, HttpStatus.OK);
     }
     
     @GetMapping("/goleadores/torneo/{torneoId}")
@@ -100,13 +80,9 @@ public class JugadorController {
     
     @PutMapping("/{id}/cambiar-equipo")
     public ResponseEntity<Jugador> cambiarEquipo(@PathVariable Long id, @RequestBody Map<String, Long> request) {
-        try {
-            Long nuevoEquipoId = request.get("equipoId");
-            Jugador jugadorActualizado = jugadorUseCase.cambiarEquipo(id, nuevoEquipoId);
-            return new ResponseEntity<>(jugadorActualizado, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Long nuevoEquipoId = request.get("equipoId");
+        Jugador jugadorActualizado = jugadorUseCase.cambiarEquipo(id, nuevoEquipoId);
+        return new ResponseEntity<>(jugadorActualizado, HttpStatus.OK);
     }
     
     private GoleadorResponse toGoleadorResponse(Jugador jugador) {

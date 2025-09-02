@@ -33,19 +33,15 @@ public class EnfrentamientoController {
     
     @PostMapping
     public ResponseEntity<EnfrentamientoResponse> crearEnfrentamiento(@Valid @RequestBody CrearEnfrentamientoRequest request) {
-        try {
-            Enfrentamiento enfrentamiento = enfrentamientoUseCase.crearEnfrentamiento(
-                    request.getTorneoId(),
-                    request.getEquipoLocalId(),
-                    request.getEquipoVisitanteId(),
-                    request.getFechaHora(),
-                    request.getCancha()
-            );
-            EnfrentamientoResponse response = toResponse(enfrentamiento);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Enfrentamiento enfrentamiento = enfrentamientoUseCase.crearEnfrentamiento(
+                request.getTorneoId(),
+                request.getEquipoLocalId(),
+                request.getEquipoVisitanteId(),
+                request.getFechaHora(),
+                request.getCancha()
+        );
+        EnfrentamientoResponse response = toResponse(enfrentamiento);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
     
     @GetMapping("/{id}")
@@ -88,81 +84,51 @@ public class EnfrentamientoController {
     public ResponseEntity<EnfrentamientoResponse> actualizarEnfrentamiento(
             @PathVariable Long id, 
             @Valid @RequestBody ActualizarEnfrentamientoRequest request) {
-        try {
-            Enfrentamiento enfrentamiento = enfrentamientoUseCase.actualizarEnfrentamiento(
-                    id, 
-                    request.getFechaHora(), 
-                    request.getCancha()
-            );
-            EnfrentamientoResponse response = toResponse(enfrentamiento);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Enfrentamiento enfrentamiento = enfrentamientoUseCase.actualizarEnfrentamiento(
+                id, 
+                request.getFechaHora(), 
+                request.getCancha()
+        );
+        EnfrentamientoResponse response = toResponse(enfrentamiento);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     @PostMapping("/{id}/resultado")
     public ResponseEntity<EnfrentamientoResponse> registrarResultado(
             @PathVariable Long id, 
             @Valid @RequestBody RegistrarResultadoRequest request) {
-        try {
-            Enfrentamiento enfrentamiento = enfrentamientoUseCase.registrarResultado(
-                    id, 
-                    request.getGolesLocal(), 
-                    request.getGolesVisitante()
-            );
-            EnfrentamientoResponse response = toResponse(enfrentamiento);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Enfrentamiento enfrentamiento = enfrentamientoUseCase.registrarResultado(
+                id, 
+                request.getGolesLocal(), 
+                request.getGolesVisitante()
+        );
+        EnfrentamientoResponse response = toResponse(enfrentamiento);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     @PostMapping("/{id}/goles-jugador")
     public ResponseEntity<Void> registrarGolesJugador(
             @PathVariable Long id, 
             @Valid @RequestBody RegistrarGolesJugadorRequest request) {
-        try {
-            enfrentamientoUseCase.registrarGolesJugador(
-                    id, 
-                    request.getJugadorId(), 
-                    request.getCantidadGoles()
-            );
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        enfrentamientoUseCase.registrarGolesJugador(
+                id, 
+                request.getJugadorId(), 
+                request.getCantidadGoles()
+        );
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     
     @PostMapping("/{id}/cancelar")
     public ResponseEntity<EnfrentamientoResponse> cancelarEnfrentamiento(@PathVariable Long id) {
-        try {
-            Enfrentamiento enfrentamiento = enfrentamientoUseCase.cancelarEnfrentamiento(id);
-            EnfrentamientoResponse response = toResponse(enfrentamiento);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        Enfrentamiento enfrentamiento = enfrentamientoUseCase.cancelarEnfrentamiento(id);
+        EnfrentamientoResponse response = toResponse(enfrentamiento);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarEnfrentamiento(@PathVariable Long id) {
-        try {
-            enfrentamientoUseCase.eliminarEnfrentamiento(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (IllegalStateException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        enfrentamientoUseCase.eliminarEnfrentamiento(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     
     private EnfrentamientoResponse toResponse(Enfrentamiento enfrentamiento) {

@@ -1,5 +1,6 @@
 package com.futnorte.torneo.domain.entities;
 
+import com.futnorte.torneo.domain.exceptions.BusinessRuleException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -26,24 +27,24 @@ public class Torneo {
     
     public void iniciarTorneo(int cantidadEquipos) {
         if (this.estado == EstadoTorneo.FINALIZADO) {
-            throw new IllegalStateException("El torneo solo puede iniciarse si está en estado CREADO O CANCELADO");
+            throw new BusinessRuleException("El torneo solo puede iniciarse si está en estado CREADO O CANCELADO");
         }
         if (cantidadEquipos < 2) {
-            throw new IllegalStateException("El torneo debe tener al menos 2 equipos para iniciarse");
+            throw new BusinessRuleException("El torneo debe tener al menos 2 equipos para iniciarse");
         }
         this.estado = EstadoTorneo.EN_CURSO;
     }
     
     public void finalizarTorneo() {
         if (this.estado != EstadoTorneo.EN_CURSO) {
-            throw new IllegalStateException("El torneo solo puede finalizarse si está EN_CURSO");
+            throw new BusinessRuleException("El torneo solo puede finalizarse si está EN_CURSO");
         }
         this.estado = EstadoTorneo.FINALIZADO;
     }
     
     public void cancelarTorneo() {
         if (this.estado == EstadoTorneo.FINALIZADO) {
-            throw new IllegalStateException("No se puede cancelar un torneo que ya está finalizado");
+            throw new BusinessRuleException("No se puede cancelar un torneo que ya está finalizado");
         }
         this.estado = EstadoTorneo.CANCELADO;
     }
@@ -54,7 +55,7 @@ public class Torneo {
     
     public void validarEliminacion() {
         if (!puedeSerEliminado()) {
-            throw new IllegalStateException("Solo se pueden eliminar torneos en estado CANCELADO o FINALIZADO");
+            throw new BusinessRuleException("Solo se pueden eliminar torneos en estado CANCELADO o FINALIZADO");
         }
     }
     
