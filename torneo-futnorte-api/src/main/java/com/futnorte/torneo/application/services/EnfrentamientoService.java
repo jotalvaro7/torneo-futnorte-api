@@ -2,10 +2,12 @@ package com.futnorte.torneo.application.services;
 
 import com.futnorte.torneo.domain.entities.Enfrentamiento;
 import com.futnorte.torneo.domain.entities.Equipo;
+import com.futnorte.torneo.domain.entities.Jugador;
 import com.futnorte.torneo.domain.entities.Torneo;
 import com.futnorte.torneo.domain.ports.in.EnfrentamientoUseCase;
 import com.futnorte.torneo.domain.ports.out.EnfrentamientoRepositoryPort;
 import com.futnorte.torneo.domain.ports.out.EquipoRepositoryPort;
+import com.futnorte.torneo.domain.ports.out.JugadorRepositoryPort;
 import com.futnorte.torneo.domain.ports.out.TorneoRepositoryPort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +23,16 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
     private final EnfrentamientoRepositoryPort enfrentamientoRepository;
     private final EquipoRepositoryPort equipoRepository;
     private final TorneoRepositoryPort torneoRepository;
+    private final JugadorRepositoryPort jugadorRepository;
     
     public EnfrentamientoService(EnfrentamientoRepositoryPort enfrentamientoRepository,
                                EquipoRepositoryPort equipoRepository,
-                               TorneoRepositoryPort torneoRepository) {
+                               TorneoRepositoryPort torneoRepository,
+                               JugadorRepositoryPort jugadorRepository) {
         this.enfrentamientoRepository = enfrentamientoRepository;
         this.equipoRepository = equipoRepository;
         this.torneoRepository = torneoRepository;
+        this.jugadorRepository = jugadorRepository;
     }
     
     @Override
@@ -82,6 +87,27 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
         equipoRepository.guardar(equipoVisitante);
         
         return enfrentamientoRepository.save(enfrentamiento);
+    }
+    
+    @Override
+    public void registrarGolesJugador(Long enfrentamientoId, Long jugadorId, int cantidadGoles) {
+        Enfrentamiento enfrentamiento = enfrentamientoRepository.findById(enfrentamientoId)
+                .orElseThrow(() -> new IllegalArgumentException("El enfrentamiento no existe"));
+        
+        if (!enfrentamiento.estaFinalizado()) {
+            throw new IllegalStateException("Solo se pueden registrar goles en enfrentamientos finalizados");
+        }
+        
+        Jugador jugador = jugadorRepository.buscarPorId(jugadorId)
+                .orElseThrow(() -> new IllegalArgumentException("El jugador no existe"));
+        
+        if (!jugador.getEquipoId().equals(enfrentamiento.getEquipoLocalId()) && 
+            !jugador.getEquipoId().equals(enfrentamiento.getEquipoVisitanteId())) {
+            throw new IllegalArgumentException("El jugador debe pertenecer a uno de los equipos del enfrentamiento");
+        }
+        
+        jugador.anotarGoles(cantidadGoles);
+        jugadorRepository.guardar(jugador);
     }
     
     @Override

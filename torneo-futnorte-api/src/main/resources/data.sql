@@ -208,7 +208,7 @@ INSERT INTO jugadores (nombre, apellido, identificacion, nacionalidad, equipo_id
 
 -- Enfrentamientos del torneo Liga Premier 2024 (torneo_id = 1)
 INSERT INTO enfrentamientos (torneo_id, equipo_local_id, equipo_visitante_id, fecha_hora, cancha, estado, goles_local, goles_visitante) VALUES
-(1, 1, 2, '2024-03-15T20:00:00', 'Estadio Santiago Bernabéu', 'FINALIZADO', 2, 1),
+(1, 1, 2, '2024-03-15T20:00:00', 'Estadio Santiago Bernabéu', 'PROGRAMADO', null, null),
 (1, 3, 4, '2024-03-15T18:00:00', 'Metropolitano', 'FINALIZADO', 1, 1),
 (1, 5, 1, '2024-03-22T21:00:00', 'Ramón Sánchez-Pizjuán', 'FINALIZADO', 0, 3),
 (1, 2, 3, '2024-03-22T19:00:00', 'Camp Nou', 'FINALIZADO', 2, 0),

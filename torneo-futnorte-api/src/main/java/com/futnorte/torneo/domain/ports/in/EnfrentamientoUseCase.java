@@ -15,6 +15,8 @@ public interface EnfrentamientoUseCase {
     
     Enfrentamiento registrarResultado(Long enfrentamientoId, int golesLocal, int golesVisitante);
     
+    void registrarGolesJugador(Long enfrentamientoId, Long jugadorId, int cantidadGoles);
+    
     Enfrentamiento cancelarEnfrentamiento(Long enfrentamientoId);
     
     Optional<Enfrentamiento> obtenerEnfrentamientoPorId(Long enfrentamientoId);

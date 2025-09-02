@@ -23,4 +23,6 @@ public interface JugadorUseCase {
     void eliminarJugadoresPorEquipo(Long equipoId);
     
     Jugador cambiarEquipo(Long jugadorId, Long nuevoEquipoId);
+    
+    List<Jugador> obtenerGoleadoresPorTorneo(Long torneoId);
 }
