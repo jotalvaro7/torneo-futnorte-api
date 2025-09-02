@@ -8,7 +8,6 @@ import org.slf4j.MDC;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -124,24 +123,6 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
-
-    /*
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex, HttpServletRequest request) {
-        String traceId = getOrCreateTraceId();
-        
-        logger.warn("Access denied - TraceId: {}, Path: {}, User: {}", 
-                traceId, request.getRequestURI(), request.getRemoteUser());
-        
-        ErrorResponse errorResponse = new ErrorResponse(
-                "ACCESS_DENIED",
-                "No tienes permisos para realizar esta acción",
-                traceId,
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
-    }
-    */
     
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneral(Exception ex, HttpServletRequest request) {
