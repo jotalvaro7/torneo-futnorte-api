@@ -1,13 +1,14 @@
 package com.futnorte.torneo.infrastructure.adapters.in.web;
 
 import com.futnorte.torneo.domain.entities.Enfrentamiento;
+import com.futnorte.torneo.domain.entities.GolesJugador;
 import com.futnorte.torneo.domain.ports.in.EnfrentamientoUseCase;
 import com.futnorte.torneo.domain.ports.in.EquipoUseCase;
+import com.futnorte.torneo.domain.ports.in.JugadorUseCase;
 import com.futnorte.torneo.infrastructure.adapters.in.web.dto.ActualizarEnfrentamientoRequest;
 import com.futnorte.torneo.infrastructure.adapters.in.web.dto.CrearEnfrentamientoRequest;
 import com.futnorte.torneo.infrastructure.adapters.in.web.dto.EnfrentamientoResponse;
-import com.futnorte.torneo.infrastructure.adapters.in.web.dto.RegistrarGolesJugadorRequest;
-import com.futnorte.torneo.infrastructure.adapters.in.web.dto.RegistrarResultadoRequest;
+import com.futnorte.torneo.infrastructure.adapters.in.web.dto.GolesJugadorResponse;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,10 +27,14 @@ public class EnfrentamientoController {
     
     private final EnfrentamientoUseCase enfrentamientoUseCase;
     private final EquipoUseCase equipoUseCase;
-    
-    public EnfrentamientoController(EnfrentamientoUseCase enfrentamientoUseCase, EquipoUseCase equipoUseCase) {
+    private final JugadorUseCase jugadorUseCase;
+
+    public EnfrentamientoController(EnfrentamientoUseCase enfrentamientoUseCase,
+                                   EquipoUseCase equipoUseCase,
+                                   JugadorUseCase jugadorUseCase) {
         this.enfrentamientoUseCase = enfrentamientoUseCase;
         this.equipoUseCase = equipoUseCase;
+        this.jugadorUseCase = jugadorUseCase;
     }
     
     @PostMapping
@@ -82,49 +88,24 @@ public class EnfrentamientoController {
     
     @PutMapping("/{id}")
     public ResponseEntity<EnfrentamientoResponse> actualizarEnfrentamiento(
-            @PathVariable Long id, 
+            @PathVariable Long id,
             @Valid @RequestBody ActualizarEnfrentamientoRequest request) {
+
+
         Enfrentamiento enfrentamiento = enfrentamientoUseCase.actualizarEnfrentamiento(
-                id, 
-                request.getFechaHora(), 
-                request.getCancha()
+                id,
+                request.getFechaHora(),
+                request.getCancha(),
+                request.getEstado(),
+                request.getGolesLocal(),
+                request.getGolesVisitante(),
+                request.getGolesJugadoresLocal(),
+                request.getGolesJugadoresVisitante()
         );
         EnfrentamientoResponse response = toResponse(enfrentamiento);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
-    @PostMapping("/{id}/resultado")
-    public ResponseEntity<EnfrentamientoResponse> registrarResultado(
-            @PathVariable Long id, 
-            @Valid @RequestBody RegistrarResultadoRequest request) {
-        Enfrentamiento enfrentamiento = enfrentamientoUseCase.registrarResultado(
-                id, 
-                request.getGolesLocal(), 
-                request.getGolesVisitante()
-        );
-        EnfrentamientoResponse response = toResponse(enfrentamiento);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-    
-    @PostMapping("/{id}/goles-jugador")
-    public ResponseEntity<Void> registrarGolesJugador(
-            @PathVariable Long id, 
-            @Valid @RequestBody RegistrarGolesJugadorRequest request) {
-        enfrentamientoUseCase.registrarGolesJugador(
-                id, 
-                request.getJugadorId(), 
-                request.getCantidadGoles()
-        );
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-    
-    @PostMapping("/{id}/cancelar")
-    public ResponseEntity<EnfrentamientoResponse> cancelarEnfrentamiento(@PathVariable Long id) {
-        Enfrentamiento enfrentamiento = enfrentamientoUseCase.cancelarEnfrentamiento(id);
-        EnfrentamientoResponse response = toResponse(enfrentamiento);
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarEnfrentamiento(@PathVariable Long id) {
         enfrentamientoUseCase.eliminarEnfrentamiento(id);
@@ -134,7 +115,33 @@ public class EnfrentamientoController {
     private EnfrentamientoResponse toResponse(Enfrentamiento enfrentamiento) {
         String equipoLocalNombre = equipoUseCase.buscarEquipoPorId(enfrentamiento.getEquipoLocalId()).getNombre();
         String equipoVisitanteNombre = equipoUseCase.buscarEquipoPorId(enfrentamiento.getEquipoVisitanteId()).getNombre();
-        
+
+        // Obtener goles de jugadores si el enfrentamiento está finalizado
+        List<GolesJugadorResponse> golesJugadoresLocal = new ArrayList<>();
+        List<GolesJugadorResponse> golesJugadoresVisitante = new ArrayList<>();
+
+        if (enfrentamiento.estaFinalizado()) {
+            List<GolesJugador> golesJugadores = enfrentamientoUseCase.obtenerGolesJugadoresPorEnfrentamiento(enfrentamiento.getId());
+
+            for (GolesJugador goles : golesJugadores) {
+                var jugador = jugadorUseCase.buscarJugadorPorId(goles.getJugadorId());
+
+                GolesJugadorResponse golesResponse = new GolesJugadorResponse(
+                        goles.getJugadorId(),
+                        jugador.getNombre(),
+                        jugador.getApellido(),
+                        goles.getCantidadGoles()
+                );
+
+                // Determinar si es jugador local o visitante
+                if (jugador.getEquipoId().equals(enfrentamiento.getEquipoLocalId())) {
+                    golesJugadoresLocal.add(golesResponse);
+                } else {
+                    golesJugadoresVisitante.add(golesResponse);
+                }
+            }
+        }
+
         return new EnfrentamientoResponse(
                 enfrentamiento.getId(),
                 enfrentamiento.getTorneoId(),
@@ -144,7 +151,9 @@ public class EnfrentamientoController {
                 enfrentamiento.getCancha(),
                 enfrentamiento.getEstado(),
                 enfrentamiento.getGolesLocal(),
-                enfrentamiento.getGolesVisitante()
+                enfrentamiento.getGolesVisitante(),
+                golesJugadoresLocal,
+                golesJugadoresVisitante
         );
     }
 }

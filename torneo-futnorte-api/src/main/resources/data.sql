@@ -1,9 +1,9 @@
 -- Datos de prueba para la aplicación de torneos de fútbol
 
 INSERT INTO torneos (nombre, descripcion, fecha_inicio, fecha_fin, estado) VALUES
-('Liga Premier 2024', 'Torneo de fútbol profesional temporada 2024', '2024-03-01T10:00:00', '2024-11-30T22:00:00', 'EN_CURSO'),
-('Copa América Junior', 'Torneo de fútbol juvenil', '2024-06-01T09:00:00', '2024-08-31T20:00:00', 'EN_CURSO'),
-('Torneo Regional Norte', 'Competencia regional de equipos del norte', '2024-02-15T08:00:00', '2024-05-15T19:00:00', 'EN_CURSO');
+('La Liga 2025', 'Torneo de fútbol profesional temporada 2025', '2025-09-13T10:00:00', '2025-12-30T23:59:59', 'EN_CURSO'),
+('Copa América Junior', 'Torneo de fútbol juvenil', '2025-09-13T10:00:00', '2025-12-30T23:59:59', 'EN_CURSO'),
+('Torneo Regional Norte', 'Competencia regional de equipos del norte', '2025-09-13T10:00:00', '2025-12-30T23:59:59', 'EN_CURSO');
 
 INSERT INTO equipos (nombre, entrenador, torneo_id, puntos, partidos_jugados, partidos_ganados, partidos_empatados, partidos_perdidos, goles_a_favor, goles_en_contra) VALUES
 ('Real Madrid FC', 'Carlos Ancelotti', 1, 45, 15, 14, 3, 1, 42, 8),
@@ -208,37 +208,91 @@ INSERT INTO jugadores (nombre, apellido, identificacion, nacionalidad, equipo_id
 
 -- Enfrentamientos del torneo Liga Premier 2024 (torneo_id = 1)
 INSERT INTO enfrentamientos (torneo_id, equipo_local_id, equipo_visitante_id, fecha_hora, cancha, estado, goles_local, goles_visitante) VALUES
-(1, 1, 2, '2024-03-15T20:00:00', 'Estadio Santiago Bernabéu', 'PROGRAMADO', null, null),
-(1, 3, 4, '2024-03-15T18:00:00', 'Metropolitano', 'FINALIZADO', 1, 1),
-(1, 5, 1, '2024-03-22T21:00:00', 'Ramón Sánchez-Pizjuán', 'FINALIZADO', 0, 3),
-(1, 2, 3, '2024-03-22T19:00:00', 'Camp Nou', 'FINALIZADO', 2, 0),
-(1, 4, 5, '2024-03-29T20:30:00', 'Mestalla', 'FINALIZADO', 1, 0),
-(1, 1, 3, '2024-04-05T21:00:00', 'Estadio Santiago Bernabéu', 'PROGRAMADO', null, null),
-(1, 2, 4, '2024-04-05T19:00:00', 'Camp Nou', 'PROGRAMADO', null, null),
-(1, 5, 3, '2024-04-12T20:00:00', 'Ramón Sánchez-Pizjuán', 'PROGRAMADO', null, null),
-(1, 4, 1, '2024-04-12T18:00:00', 'Mestalla', 'PROGRAMADO', null, null),
-(1, 2, 5, '2024-04-19T21:30:00', 'Camp Nou', 'PROGRAMADO', null, null);
+(1, 3, 4, '2025-09-13T18:00:00', 'Metropolitano', 'FINALIZADO', 1, 1),
+(1, 5, 1, '2025-09-13T21:00:00', 'Ramón Sánchez-Pizjuán', 'FINALIZADO', 0, 3),
+(1, 2, 3, '2025-09-14T19:00:00', 'Camp Nou', 'FINALIZADO', 2, 0),
+(1, 4, 5, '2025-09-14T20:30:00', 'Mestalla', 'FINALIZADO', 1, 0),
+(1, 1, 2, '2025-09-20T20:00:00', 'Estadio Santiago Bernabéu', 'PROGRAMADO', null, null),
+(1, 1, 3, '2025-09-20T21:00:00', 'Estadio Santiago Bernabéu', 'PROGRAMADO', null, null),
+(1, 2, 4, '2025-09-21T19:00:00', 'Camp Nou', 'PROGRAMADO', null, null),
+(1, 5, 3, '2025-09-21T20:00:00', 'Ramón Sánchez-Pizjuán', 'PROGRAMADO', null, null),
+(1, 4, 1, '2025-09-21T18:00:00', 'Mestalla', 'PROGRAMADO', null, null),
+(1, 2, 5, '2025-09-21T21:30:00', 'Camp Nou', 'PROGRAMADO', null, null);
 
 -- Enfrentamientos del torneo Copa América Junior (torneo_id = 2)
 INSERT INTO enfrentamientos (torneo_id, equipo_local_id, equipo_visitante_id, fecha_hora, cancha, estado, goles_local, goles_visitante) VALUES
-(2, 6, 7, '2024-06-08T16:00:00', 'Estadio Juvenil Norte', 'PROGRAMADO', null, null),
-(2, 8, 9, '2024-06-08T14:00:00', 'Campo Municipal Sur', 'PROGRAMADO', null, null),
-(2, 6, 8, '2024-06-15T16:00:00', 'Estadio Juvenil Norte', 'PROGRAMADO', null, null),
-(2, 7, 9, '2024-06-15T14:00:00', 'Coliseo Deportivo', 'PROGRAMADO', null, null),
-(2, 6, 9, '2024-06-22T17:00:00', 'Estadio Juvenil Norte', 'PROGRAMADO', null, null),
-(2, 7, 8, '2024-06-22T15:00:00', 'Campo Municipal Sur', 'PROGRAMADO', null, null);
+(2, 6, 7, '2025-09-20T16:00:00', 'Estadio Juvenil Norte', 'PROGRAMADO', null, null),
+(2, 8, 9, '2025-09-20T14:00:00', 'Campo Municipal Sur', 'PROGRAMADO', null, null),
+(2, 6, 8, '2025-09-21T16:00:00', 'Estadio Juvenil Norte', 'PROGRAMADO', null, null),
+(2, 7, 9, '2025-09-21T14:00:00', 'Coliseo Deportivo', 'PROGRAMADO', null, null),
+(2, 6, 9, '2025-09-21T17:00:00', 'Estadio Juvenil Norte', 'PROGRAMADO', null, null),
+(2, 7, 8, '2025-09-21T15:00:00', 'Campo Municipal Sur', 'PROGRAMADO', null, null);
 
 -- Enfrentamientos del Torneo Regional Norte (torneo_id = 3)
 INSERT INTO enfrentamientos (torneo_id, equipo_local_id, equipo_visitante_id, fecha_hora, cancha, estado, goles_local, goles_visitante) VALUES
-(3, 10, 11, '2024-02-25T15:00:00', 'Estadio Regional Norte', 'FINALIZADO', 3, 1),
-(3, 12, 13, '2024-02-25T17:00:00', 'Campo Cordillera', 'FINALIZADO', 2, 0),
-(3, 10, 12, '2024-03-03T16:00:00', 'Estadio Regional Norte', 'FINALIZADO', 1, 1),
-(3, 11, 13, '2024-03-03T18:00:00', 'Polideportivo Montaña', 'FINALIZADO', 2, 1),
-(3, 10, 13, '2024-03-10T15:30:00', 'Estadio Regional Norte', 'FINALIZADO', 4, 0),
-(3, 11, 12, '2024-03-10T17:30:00', 'Polideportivo Montaña', 'FINALIZADO', 1, 2),
-(3, 11, 10, '2024-03-17T16:00:00', 'Polideportivo Montaña', 'PROGRAMADO', null, null),
-(3, 13, 12, '2024-03-17T18:00:00', 'Campo Nevados', 'PROGRAMADO', null, null),
-(3, 12, 10, '2024-03-24T15:00:00', 'Campo Cordillera', 'PROGRAMADO', null, null),
-(3, 13, 11, '2024-03-24T17:00:00', 'Campo Nevados', 'PROGRAMADO', null, null),
-(3, 13, 10, '2024-03-31T16:30:00', 'Campo Nevados', 'PROGRAMADO', null, null),
-(3, 12, 11, '2024-03-31T18:30:00', 'Campo Cordillera', 'PROGRAMADO', null, null);
+(3, 10, 11, '2025-09-13T15:00:00', 'Estadio Regional Norte', 'FINALIZADO', 3, 1),
+(3, 12, 13, '2025-09-13T17:00:00', 'Campo Cordillera', 'FINALIZADO', 2, 0),
+(3, 10, 12, '2025-09-14T16:00:00', 'Estadio Regional Norte', 'FINALIZADO', 1, 1),
+(3, 11, 13, '2025-09-14T18:00:00', 'Polideportivo Montaña', 'FINALIZADO', 2, 1),
+(3, 10, 13, '2025-09-14T15:30:00', 'Estadio Regional Norte', 'FINALIZADO', 4, 0),
+(3, 11, 12, '2025-09-14T17:30:00', 'Polideportivo Montaña', 'FINALIZADO', 1, 2),
+(3, 11, 10, '2025-09-20T16:00:00', 'Polideportivo Montaña', 'PROGRAMADO', null, null),
+(3, 13, 12, '2025-09-20T18:00:00', 'Campo Nevados', 'PROGRAMADO', null, null),
+(3, 12, 10, '2025-09-21T15:00:00', 'Campo Cordillera', 'PROGRAMADO', null, null),
+(3, 13, 11, '2025-09-21T17:00:00', 'Campo Nevados', 'PROGRAMADO', null, null),
+(3, 13, 10, '2025-09-21T16:30:00', 'Campo Nevados', 'PROGRAMADO', null, null),
+(3, 12, 11, '2025-09-21T18:30:00', 'Campo Cordillera', 'PROGRAMADO', null, null);
+
+-- Insertar datos de prueba de goles por jugador para enfrentamientos finalizados
+-- Enfrentamiento 1: Atlético vs Valencia (1-1)
+INSERT INTO goles_jugador (enfrentamiento_id, jugador_id, cantidad_goles) VALUES
+(1, 22, 1), -- Álvaro Morata (Atlético) 1 gol
+(1, 76, 1); -- Hugo Duro (Valencia) 1 gol
+
+-- Enfrentamiento 2: Sevilla vs Real Madrid (0-3)
+INSERT INTO goles_jugador (enfrentamiento_id, jugador_id, cantidad_goles) VALUES
+(2, 2, 2),  -- Karim Benzema (Real Madrid) 2 goles
+(2, 4, 1);  -- Vinícius Jr. (Real Madrid) 1 gol
+
+-- Enfrentamiento 3: Barcelona vs Atlético (2-0)
+INSERT INTO goles_jugador (enfrentamiento_id, jugador_id, cantidad_goles) VALUES
+(3, 12, 1), -- Robert Lewandowski (Barcelona) 1 gol
+(3, 13, 1); -- Ansu Fati (Barcelona) 1 gol
+
+-- Enfrentamiento 4: Valencia vs Sevilla (1-0)
+INSERT INTO goles_jugador (enfrentamiento_id, jugador_id, cantidad_goles) VALUES
+(4, 76, 1); -- Hugo Duro (Valencia) 1 gol
+
+-- Enfrentamiento Regional 17: Norte United vs Montaña FC (3-1)
+INSERT INTO goles_jugador (enfrentamiento_id, jugador_id, cantidad_goles) VALUES
+(17, 156, 2), -- Eduardo Montoya (Norte United) 2 goles
+(17, 157, 1), -- Ricardo Valdez (Norte United) 1 gol
+(17, 169, 1); -- Alberto Quintero (Montaña FC) 1 gol
+
+-- Enfrentamiento Regional 18: Cordillera vs Nevados (2-0)
+INSERT INTO goles_jugador (enfrentamiento_id, jugador_id, cantidad_goles) VALUES
+(18, 184, 1), -- Óscar Bermúdez (Cordillera) 1 gol
+(18, 189, 1); -- Esteban Cortés (Cordillera) 1 gol
+
+-- Enfrentamiento Regional 19: Norte United vs Cordillera (1-1)
+INSERT INTO goles_jugador (enfrentamiento_id, jugador_id, cantidad_goles) VALUES
+(19, 156, 1), -- Eduardo Montoya (Norte United) 1 gol
+(19, 184, 1); -- Óscar Bermúdez (Cordillera) 1 gol
+
+-- Enfrentamiento Regional 20: Montaña FC vs Nevados (2-1)
+INSERT INTO goles_jugador (enfrentamiento_id, jugador_id, cantidad_goles) VALUES
+(20, 169, 1), -- Alberto Quintero (Montaña FC) 1 gol
+(20, 171, 1), -- Sergio Delgado (Montaña FC) 1 gol
+(20, 198, 1); -- Arturo Lemus (Nevados) 1 gol
+
+-- Enfrentamiento Regional 21: Norte United vs Nevados (4-0)
+INSERT INTO goles_jugador (enfrentamiento_id, jugador_id, cantidad_goles) VALUES
+(21, 156, 2), -- Eduardo Montoya (Norte United) 2 goles
+(21, 157, 1), -- Ricardo Valdez (Norte United) 1 gol
+(21, 159, 1); -- Javier Hernández (Norte United) 1 gol
+
+-- Enfrentamiento Regional 22: Montaña FC vs Cordillera (1-2)
+INSERT INTO goles_jugador (enfrentamiento_id, jugador_id, cantidad_goles) VALUES
+(22, 169, 1), -- Alberto Quintero (Montaña FC) 1 gol
+(22, 184, 1), -- Óscar Bermúdez (Cordillera) 1 gol
+(22, 189, 1); -- Esteban Cortés (Cordillera) 1 gol

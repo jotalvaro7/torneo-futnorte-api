@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -21,4 +22,6 @@ public class EnfrentamientoResponse {
     private EstadoEnfrentamiento estado;
     private Integer golesLocal;
     private Integer golesVisitante;
+    private List<GolesJugadorResponse> golesJugadoresLocal;
+    private List<GolesJugadorResponse> golesJugadoresVisitante;
 }
