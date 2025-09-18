@@ -3,7 +3,6 @@ package com.futnorte.torneo.infrastructure.adapters.out.persistence;
 import com.futnorte.torneo.domain.entities.GolesJugador;
 import com.futnorte.torneo.domain.ports.out.GolesJugadorRepositoryPort;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;

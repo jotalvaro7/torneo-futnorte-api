@@ -98,16 +98,26 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
             equipoRepository.guardar(equipoVisitante);
         }
 
-        // Primero guardar el enfrentamiento
+        // PRIMERO: Obtener goles existentes ANTES de cualquier otra operación
+        List<GolesJugador> golesExistentesAntes = new ArrayList<>();
+        try {
+            logger.debug("Obteniendo goles existentes ANTES de modificar nada...");
+            golesExistentesAntes = golesJugadorRepository.findByEnfrentamientoId(enfrentamiento.getId());
+            logger.debug("Encontrados {} goles existentes antes de la actualización", golesExistentesAntes.size());
+        } catch (Exception e) {
+            logger.warn("Error al obtener goles existentes: {}", e.getMessage());
+        }
+
+        // SEGUNDO: Guardar el enfrentamiento
         Enfrentamiento enfrentamientoGuardado = enfrentamientoRepository.save(enfrentamiento);
         logger.debug("Enfrentamiento guardado con ID: {}", enfrentamientoGuardado.getId());
 
-        // Procesar goles de jugadores siempre que se envíen (independiente del estado)
+        // TERCERO: Procesar goles de jugadores siempre que se envíen (independiente del estado)
         if ((golesJugadoresLocal != null && !golesJugadoresLocal.isEmpty()) ||
             (golesJugadoresVisitante != null && !golesJugadoresVisitante.isEmpty())) {
             logger.debug("Procesando goles de jugadores para el enfrentamiento");
             try {
-                procesarGolesJugadores(enfrentamientoGuardado, golesJugadoresLocal, golesJugadoresVisitante);
+                procesarGolesJugadoresConHistorial(enfrentamientoGuardado, golesJugadoresLocal, golesJugadoresVisitante, golesExistentesAntes);
             } catch (Exception e) {
                 logger.error("Error al procesar goles de jugadores: {}", e.getMessage(), e);
                 throw new RuntimeException("Error al procesar goles de jugadores: " + e.getMessage(), e);
@@ -117,6 +127,97 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
         }
 
         return enfrentamientoGuardado;
+    }
+
+    private void procesarGolesJugadoresConHistorial(Enfrentamiento enfrentamiento,
+                                                  List<GolesJugadorDto> golesJugadoresLocal,
+                                                  List<GolesJugadorDto> golesJugadoresVisitante,
+                                                  List<GolesJugador> golesExistentesAntes) {
+
+        logger.debug("Procesando goles de jugadores para enfrentamiento ID: {} con historial previo", enfrentamiento.getId());
+
+        // Primero revertir goles existentes usando el historial pasado como parámetro
+        try {
+            if (golesExistentesAntes.isEmpty()) {
+                logger.debug("No hay goles existentes para revertir en enfrentamiento ID: {}", enfrentamiento.getId());
+            } else {
+                logger.debug("Revirtiendo {} goles existentes del historial", golesExistentesAntes.size());
+                for (GolesJugador golesExistente : golesExistentesAntes) {
+                    logger.debug("Procesando goles existentes del historial: Jugador ID: {}, Cantidad: {}",
+                               golesExistente.getJugadorId(), golesExistente.getCantidadGoles());
+
+                    Jugador jugador = jugadorRepository.buscarPorId(golesExistente.getJugadorId())
+                            .orElseThrow(() -> new EntityNotFoundException("Jugador", golesExistente.getJugadorId()));
+
+                    logger.debug("Jugador {} tenía {} goles antes de revertir", jugador.getNombre(), jugador.getNumeroGoles());
+
+                    // Revertir los goles que se habían sumado anteriormente
+                    jugador.revertirGoles(golesExistente.getCantidadGoles());
+                    jugadorRepository.guardar(jugador);
+
+                    logger.debug("Revertidos {} goles del jugador {}, ahora tiene {} goles",
+                               golesExistente.getCantidadGoles(), jugador.getNombre(), jugador.getNumeroGoles());
+                }
+            }
+
+            // Ahora eliminar los registros de goles
+            golesJugadorRepository.deleteByEnfrentamientoId(enfrentamiento.getId());
+            logger.debug("Eliminados goles existentes para enfrentamiento ID: {}", enfrentamiento.getId());
+        } catch (Exception e) {
+            logger.warn("Error al procesar goles existentes para enfrentamiento ID {}: {}. Continuando...",
+                       enfrentamiento.getId(), e.getMessage());
+        }
+
+        List<GolesJugador> nuevosGoles = new ArrayList<>();
+
+        // Procesar goles de jugadores locales
+        if (golesJugadoresLocal != null && !golesJugadoresLocal.isEmpty()) {
+            logger.debug("Procesando {} goles de jugadores locales", golesJugadoresLocal.size());
+            for (GolesJugadorDto golesDto : golesJugadoresLocal) {
+                try {
+                    registrarGolesJugadorInterno(enfrentamiento, golesDto.getJugadorId(),
+                                               golesDto.getCantidadGoles(), enfrentamiento.getEquipoLocalId());
+
+                    // Crear entidad de goles para persistir solo si la validación fue exitosa
+                    GolesJugador golesJugador = new GolesJugador(enfrentamiento.getId(),
+                            golesDto.getJugadorId(), golesDto.getCantidadGoles());
+                    nuevosGoles.add(golesJugador);
+
+                } catch (Exception e) {
+                    logger.warn("Error al procesar gol para jugador ID {}: {}. Continuando con el siguiente.",
+                               golesDto.getJugadorId(), e.getMessage());
+                }
+            }
+        }
+
+        // Procesar goles de jugadores visitantes
+        if (golesJugadoresVisitante != null && !golesJugadoresVisitante.isEmpty()) {
+            logger.debug("Procesando {} goles de jugadores visitantes", golesJugadoresVisitante.size());
+            for (GolesJugadorDto golesDto : golesJugadoresVisitante) {
+                try {
+                    registrarGolesJugadorInterno(enfrentamiento, golesDto.getJugadorId(),
+                                               golesDto.getCantidadGoles(), enfrentamiento.getEquipoVisitanteId());
+
+                    // Crear entidad de goles para persistir solo si la validación fue exitosa
+                    GolesJugador golesJugador = new GolesJugador(enfrentamiento.getId(),
+                            golesDto.getJugadorId(), golesDto.getCantidadGoles());
+                    nuevosGoles.add(golesJugador);
+
+                } catch (Exception e) {
+                    logger.warn("Error al procesar gol para jugador ID {}: {}. Continuando con el siguiente.",
+                               golesDto.getJugadorId(), e.getMessage());
+                }
+            }
+        }
+
+        // Persistir todos los goles
+        if (!nuevosGoles.isEmpty()) {
+            logger.debug("Guardando {} registros de goles en la base de datos", nuevosGoles.size());
+            List<GolesJugador> golesPersistidos = golesJugadorRepository.saveAll(nuevosGoles);
+            logger.debug("Persistidos exitosamente {} goles", golesPersistidos.size());
+        } else {
+            logger.debug("No hay goles nuevos para persistir");
+        }
     }
 
     private void actualizarEstadisticasEquipos(Integer golesLocal, Integer golesVisitante,
@@ -139,12 +240,38 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
 
         logger.debug("Procesando goles de jugadores para enfrentamiento ID: {}", enfrentamiento.getId());
 
-        // Primero eliminar goles existentes para este enfrentamiento
+        // Primero revertir goles existentes antes de eliminarlos
         try {
+            logger.debug("Buscando goles existentes para enfrentamiento ID: {}", enfrentamiento.getId());
+            List<GolesJugador> golesExistentes = obtenerGolesJugadoresPorEnfrentamiento(enfrentamiento.getId());
+            logger.debug("Encontrados {} goles existentes para enfrentamiento ID: {}", golesExistentes.size(), enfrentamiento.getId());
+
+            if (golesExistentes.isEmpty()) {
+                logger.debug("No hay goles existentes para revertir en enfrentamiento ID: {}", enfrentamiento.getId());
+            } else {
+                for (GolesJugador golesExistente : golesExistentes) {
+                    logger.debug("Procesando goles existentes: Jugador ID: {}, Cantidad: {}",
+                               golesExistente.getJugadorId(), golesExistente.getCantidadGoles());
+
+                    Jugador jugador = jugadorRepository.buscarPorId(golesExistente.getJugadorId())
+                            .orElseThrow(() -> new EntityNotFoundException("Jugador", golesExistente.getJugadorId()));
+
+                    logger.debug("Jugador {} tenía {} goles antes de revertir", jugador.getNombre(), jugador.getNumeroGoles());
+
+                    // Revertir los goles que se habían sumado anteriormente
+                    jugador.revertirGoles(golesExistente.getCantidadGoles());
+                    jugadorRepository.guardar(jugador);
+
+                    logger.debug("Revertidos {} goles del jugador {}, ahora tiene {} goles",
+                               golesExistente.getCantidadGoles(), jugador.getNombre(), jugador.getNumeroGoles());
+                }
+            }
+
+            // Ahora eliminar los registros de goles
             golesJugadorRepository.deleteByEnfrentamientoId(enfrentamiento.getId());
             logger.debug("Eliminados goles existentes para enfrentamiento ID: {}", enfrentamiento.getId());
         } catch (Exception e) {
-            logger.warn("Error al eliminar goles existentes para enfrentamiento ID {}: {}. Continuando...",
+            logger.warn("Error al procesar goles existentes para enfrentamiento ID {}: {}. Continuando...",
                        enfrentamiento.getId(), e.getMessage());
         }
 
@@ -166,7 +293,6 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
                 } catch (Exception e) {
                     logger.warn("Error al procesar gol para jugador ID {}: {}. Continuando con el siguiente.",
                                golesDto.getJugadorId(), e.getMessage());
-                    // Continuamos con el siguiente gol sin interrumpir el proceso completo
                 }
             }
         }
@@ -187,7 +313,6 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
                 } catch (Exception e) {
                     logger.warn("Error al procesar gol para jugador ID {}: {}. Continuando con el siguiente.",
                                golesDto.getJugadorId(), e.getMessage());
-                    // Continuamos con el siguiente gol sin interrumpir el proceso completo
                 }
             }
         }
@@ -195,7 +320,21 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
         // Persistir todos los goles
         if (!nuevosGoles.isEmpty()) {
             logger.debug("Guardando {} registros de goles en la base de datos", nuevosGoles.size());
-            golesJugadorRepository.saveAll(nuevosGoles);
+            List<GolesJugador> golesPersistidos = golesJugadorRepository.saveAll(nuevosGoles);
+            logger.debug("Persistidos exitosamente {} goles", golesPersistidos.size());
+
+            // VERIFICACIÓN INMEDIATA: Intentar leer los goles que acabamos de guardar
+            logger.debug("VERIFICACIÓN INMEDIATA: Intentando leer goles recién guardados...");
+            List<GolesJugador> verificacion = golesJugadorRepository.findByEnfrentamientoId(enfrentamiento.getId());
+            logger.debug("VERIFICACIÓN: Encontrados {} goles después del guardado", verificacion.size());
+
+            if (verificacion.isEmpty()) {
+                logger.error("ERROR CRÍTICO: No se pueden leer los goles inmediatamente después de guardarlos!");
+            } else {
+                logger.debug("ÉXITO: Los goles son legibles inmediatamente después del guardado");
+            }
+        } else {
+            logger.debug("No hay goles nuevos para persistir");
         }
     }
 

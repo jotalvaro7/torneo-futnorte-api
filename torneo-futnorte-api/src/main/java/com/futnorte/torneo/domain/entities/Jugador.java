@@ -36,6 +36,12 @@ public class Jugador {
         }
     }
 
+    public void revertirGoles(int cantidad) {
+        if (cantidad >= 0) {
+            this.numeroGoles = Math.max(0, this.numeroGoles - cantidad);
+        }
+    }
+
     public void validarJugador() {
         if (this.nombre == null || this.nombre.trim().isEmpty()) {
             throw new ValidationException("nombre", "es obligatorio");
