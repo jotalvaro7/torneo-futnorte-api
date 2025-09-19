@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/equipos")
+@CrossOrigin(origins = "*")
 public class EquipoController {
     
     private final EquipoUseCase equipoUseCase;

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/jugadores")
+@CrossOrigin(origins = "*")
 public class JugadorController {
     
     private final JugadorUseCase jugadorUseCase;

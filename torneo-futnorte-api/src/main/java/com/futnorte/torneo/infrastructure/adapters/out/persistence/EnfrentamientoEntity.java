@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "enfrentamientos")
@@ -43,4 +44,7 @@ public class EnfrentamientoEntity {
     
     @Column(name = "goles_visitante")
     private Integer golesVisitante;
+
+    @OneToMany(mappedBy = "enfrentamiento", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GolesJugadorEntity> golesJugadores;
 }
