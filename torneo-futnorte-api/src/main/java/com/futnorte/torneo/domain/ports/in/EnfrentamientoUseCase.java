@@ -1,5 +1,6 @@
 package com.futnorte.torneo.domain.ports.in;
 
+import com.futnorte.torneo.application.commands.ActualizacionEnfrentamientoCommand;
 import com.futnorte.torneo.domain.entities.Enfrentamiento;
 import com.futnorte.torneo.domain.entities.EstadoEnfrentamiento;
 import com.futnorte.torneo.domain.entities.GolesJugador;
@@ -14,9 +15,7 @@ public interface EnfrentamientoUseCase {
     Enfrentamiento crearEnfrentamiento(Long torneoId, Long equipoLocalId, Long equipoVisitanteId,
                                      LocalDateTime fechaHora, String cancha);
 
-    Enfrentamiento actualizarEnfrentamiento(Long enfrentamientoId, LocalDateTime fechaHora, String cancha,
-                                          EstadoEnfrentamiento estado, Integer golesLocal, Integer golesVisitante,
-                                          List<GolesJugadorDto> golesJugadoresLocal, List<GolesJugadorDto> golesJugadoresVisitante);
+    Enfrentamiento actualizarEnfrentamiento(ActualizacionEnfrentamientoCommand command);
 
 
     Optional<Enfrentamiento> obtenerEnfrentamientoPorId(Long enfrentamientoId);
@@ -29,5 +28,4 @@ public interface EnfrentamientoUseCase {
 
     void eliminarEnfrentamiento(Long enfrentamientoId);
 
-    List<GolesJugador> obtenerGolesJugadoresPorEnfrentamiento(Long enfrentamientoId);
 }

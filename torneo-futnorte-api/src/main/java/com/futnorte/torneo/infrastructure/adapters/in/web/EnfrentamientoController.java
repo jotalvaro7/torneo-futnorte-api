@@ -1,15 +1,19 @@
 package com.futnorte.torneo.infrastructure.adapters.in.web;
 
+import com.futnorte.torneo.application.commands.ActualizacionEnfrentamientoCommand;
+import com.futnorte.torneo.application.handlers.ActualizarEnfrentamientoHandler;
 import com.futnorte.torneo.domain.entities.Enfrentamiento;
 import com.futnorte.torneo.domain.entities.GolesJugador;
 import com.futnorte.torneo.domain.ports.in.EnfrentamientoUseCase;
 import com.futnorte.torneo.domain.ports.in.EquipoUseCase;
+import com.futnorte.torneo.domain.ports.in.GolesJugadorUseCase;
 import com.futnorte.torneo.domain.ports.in.JugadorUseCase;
 import com.futnorte.torneo.infrastructure.adapters.in.web.dto.ActualizarEnfrentamientoRequest;
 import com.futnorte.torneo.infrastructure.adapters.in.web.dto.CrearEnfrentamientoRequest;
 import com.futnorte.torneo.infrastructure.adapters.in.web.dto.EnfrentamientoResponse;
 import com.futnorte.torneo.infrastructure.adapters.in.web.dto.GolesJugadorResponse;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/enfrentamientos")
 @CrossOrigin(origins = "*")
 public class EnfrentamientoController {
@@ -28,15 +33,12 @@ public class EnfrentamientoController {
     private final EnfrentamientoUseCase enfrentamientoUseCase;
     private final EquipoUseCase equipoUseCase;
     private final JugadorUseCase jugadorUseCase;
+    private final GolesJugadorUseCase golesJugadorUseCase;
 
-    public EnfrentamientoController(EnfrentamientoUseCase enfrentamientoUseCase,
-                                   EquipoUseCase equipoUseCase,
-                                   JugadorUseCase jugadorUseCase) {
-        this.enfrentamientoUseCase = enfrentamientoUseCase;
-        this.equipoUseCase = equipoUseCase;
-        this.jugadorUseCase = jugadorUseCase;
-    }
-    
+    private final ActualizarEnfrentamientoHandler actualizarEnfrentamientoHandler;
+
+
+
     @PostMapping
     public ResponseEntity<EnfrentamientoResponse> crearEnfrentamiento(@Valid @RequestBody CrearEnfrentamientoRequest request) {
         Enfrentamiento enfrentamiento = enfrentamientoUseCase.crearEnfrentamiento(
@@ -91,8 +93,7 @@ public class EnfrentamientoController {
             @PathVariable Long id,
             @Valid @RequestBody ActualizarEnfrentamientoRequest request) {
 
-
-        Enfrentamiento enfrentamiento = enfrentamientoUseCase.actualizarEnfrentamiento(
+        ActualizacionEnfrentamientoCommand command = new ActualizacionEnfrentamientoCommand(
                 id,
                 request.getFechaHora(),
                 request.getCancha(),
@@ -102,7 +103,8 @@ public class EnfrentamientoController {
                 request.getGolesJugadoresLocal(),
                 request.getGolesJugadoresVisitante()
         );
-        EnfrentamientoResponse response = toResponse(enfrentamiento);
+        Enfrentamiento enfrentamientoActualizado = enfrentamientoUseCase.actualizarEnfrentamiento(command);
+        EnfrentamientoResponse response = toResponse(enfrentamientoActualizado);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -121,7 +123,7 @@ public class EnfrentamientoController {
         List<GolesJugadorResponse> golesJugadoresVisitante = new ArrayList<>();
 
         if (enfrentamiento.estaFinalizado()) {
-            List<GolesJugador> golesJugadores = enfrentamientoUseCase.obtenerGolesJugadoresPorEnfrentamiento(enfrentamiento.getId());
+            List<GolesJugador> golesJugadores = golesJugadorUseCase.obtenerGolesJugadoresPorEnfrentamiento(enfrentamiento.getId());
 
             for (GolesJugador goles : golesJugadores) {
                 var jugador = jugadorUseCase.buscarJugadorPorId(goles.getJugadorId());
