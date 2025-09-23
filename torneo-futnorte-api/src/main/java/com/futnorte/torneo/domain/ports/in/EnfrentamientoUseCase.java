@@ -1,30 +1,27 @@
 package com.futnorte.torneo.domain.ports.in;
 
-import com.futnorte.torneo.application.commands.ActualizacionEnfrentamientoCommand;
-import com.futnorte.torneo.domain.entities.Enfrentamiento;
-import com.futnorte.torneo.domain.entities.EstadoEnfrentamiento;
-import com.futnorte.torneo.domain.entities.GolesJugador;
-import com.futnorte.torneo.infrastructure.adapters.in.web.dto.GolesJugadorDto;
+import com.futnorte.torneo.application.dto.ActualizarEnfrentamientoApplicationDTO;
+import com.futnorte.torneo.application.dto.EnfrentamientoResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface EnfrentamientoUseCase {
 
-    Enfrentamiento crearEnfrentamiento(Long torneoId, Long equipoLocalId, Long equipoVisitanteId,
+    EnfrentamientoResponseDTO crearEnfrentamiento(Long torneoId, Long equipoLocalId, Long equipoVisitanteId,
                                      LocalDateTime fechaHora, String cancha);
 
-    Enfrentamiento actualizarEnfrentamiento(ActualizacionEnfrentamientoCommand command);
+    EnfrentamientoResponseDTO actualizarEnfrentamiento(ActualizarEnfrentamientoApplicationDTO actualizarEnfrentamientoApplicationDTO);
 
+    Optional<EnfrentamientoResponseDTO> obtenerEnfrentamientoPorId(Long enfrentamientoId);
 
-    Optional<Enfrentamiento> obtenerEnfrentamientoPorId(Long enfrentamientoId);
+    List<EnfrentamientoResponseDTO> obtenerEnfrentamientosPorTorneo(Long torneoId);
 
-    List<Enfrentamiento> obtenerEnfrentamientosPorTorneo(Long torneoId);
+    List<EnfrentamientoResponseDTO> obtenerEnfrentamientosPorEquipo(Long equipoId);
 
-    List<Enfrentamiento> obtenerEnfrentamientosPorEquipo(Long equipoId);
-
-    List<Enfrentamiento> obtenerEnfrentamientosPorFecha(LocalDateTime fechaInicio, LocalDateTime fechaFin);
+    List<EnfrentamientoResponseDTO> obtenerEnfrentamientosPorFecha(LocalDateTime fechaInicio, LocalDateTime fechaFin);
 
     void eliminarEnfrentamiento(Long enfrentamientoId);
 

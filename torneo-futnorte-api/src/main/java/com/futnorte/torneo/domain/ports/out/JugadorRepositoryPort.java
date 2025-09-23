@@ -26,4 +26,6 @@ public interface JugadorRepositoryPort {
     void eliminarPorEquipoId(Long equipoId);
     
     List<Jugador> buscarGoleadoresPorTorneo(Long torneoId);
+
+    List<Jugador> buscarTodosJugadoresPorIds(List<Long> jugadorIds);
 }

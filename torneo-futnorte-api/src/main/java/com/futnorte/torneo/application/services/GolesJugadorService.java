@@ -1,5 +1,6 @@
 package com.futnorte.torneo.application.services;
 
+import com.futnorte.torneo.application.dto.GolesJugadorApplicationDTO;
 import com.futnorte.torneo.domain.entities.GolesJugador;
 import com.futnorte.torneo.domain.entities.Jugador;
 import com.futnorte.torneo.domain.exceptions.EntityNotFoundException;
@@ -7,7 +8,6 @@ import com.futnorte.torneo.domain.exceptions.ValidationException;
 import com.futnorte.torneo.domain.ports.in.GolesJugadorUseCase;
 import com.futnorte.torneo.domain.ports.out.GolesJugadorRepositoryPort;
 import com.futnorte.torneo.domain.ports.out.JugadorRepositoryPort;
-import com.futnorte.torneo.infrastructure.adapters.in.web.dto.GolesJugadorDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -51,8 +51,8 @@ public class GolesJugadorService implements GolesJugadorUseCase {
     public void procesarGolesJugadores(Long enfrentamientoId,
                                        Long equipoLocalId,
                                        Long equipoVisitanteId,
-                                       List<GolesJugadorDto> golesJugadoresLocal,
-                                       List<GolesJugadorDto> golesJugadoresVisitante,
+                                       List<GolesJugadorApplicationDTO> golesJugadoresLocal,
+                                       List<GolesJugadorApplicationDTO> golesJugadoresVisitante,
                                        List<GolesJugador> golesExistentes) {
         log.debug("Procesando goles de jugadores para enfrentamiento ID: {}", enfrentamientoId);
 
@@ -120,8 +120,8 @@ public class GolesJugadorService implements GolesJugadorUseCase {
     private List<GolesJugador> crearNuevosGoles(Long enfrentamientoId,
                                                 Long equipoLocalId,
                                                 Long equipoVisitanteId,
-                                                List<GolesJugadorDto> golesLocal,
-                                                List<GolesJugadorDto> golesVisitante) {
+                                                List<GolesJugadorApplicationDTO> golesLocal,
+                                                List<GolesJugadorApplicationDTO> golesVisitante) {
         List<GolesJugador> nuevosGoles = new ArrayList<>();
 
         // Procesar goles del equipo local
@@ -134,7 +134,7 @@ public class GolesJugadorService implements GolesJugadorUseCase {
     }
 
     private List<GolesJugador> procesarGolesEquipo(Long enfrentamientoId,
-                                                   List<GolesJugadorDto> golesJugadores,
+                                                   List<GolesJugadorApplicationDTO> golesJugadores,
                                                    Long equipoId) {
         if (golesJugadores == null || golesJugadores.isEmpty()) {
             return new ArrayList<>();
@@ -142,17 +142,17 @@ public class GolesJugadorService implements GolesJugadorUseCase {
 
         List<GolesJugador> golesEquipo = new ArrayList<>();
 
-        for (GolesJugadorDto golesDto : golesJugadores) {
+        for (GolesJugadorApplicationDTO golesDto : golesJugadores) {
             try {
-                registrarGolesEnJugador(golesDto.getJugadorId(),
-                        golesDto.getCantidadGoles(), equipoId);
+                registrarGolesEnJugador(golesDto.jugadorId(),
+                        golesDto.cantidadGoles(), equipoId);
 
                 golesEquipo.add(new GolesJugador(enfrentamientoId,
-                        golesDto.getJugadorId(), golesDto.getCantidadGoles()));
+                        golesDto.jugadorId(), golesDto.cantidadGoles()));
 
             } catch (Exception e) {
                 log.warn("Error al procesar gol para jugador ID {}: {}",
-                        golesDto.getJugadorId(), e.getMessage());
+                        golesDto.jugadorId(), e.getMessage());
             }
         }
 

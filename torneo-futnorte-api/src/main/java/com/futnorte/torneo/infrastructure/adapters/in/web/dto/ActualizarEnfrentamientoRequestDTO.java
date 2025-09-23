@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActualizarEnfrentamientoRequest {
+public class ActualizarEnfrentamientoRequestDTO {
 
     private LocalDateTime fechaHora;
     private String cancha;

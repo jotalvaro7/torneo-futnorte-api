@@ -24,9 +24,37 @@ public class EstadisticasEquipoService implements EstadisticasEquipoUseCase {
 
         ResultadoPartido resultado = determinarResultado(golesLocal, golesVisitante);
 
-        aplicarResultadoAEquipos(equipoLocal, equipoVisitante, golesLocal, golesVisitante, resultado);
+        aplicarNuevoResultadoAEquipos(equipoLocal, equipoVisitante, golesLocal, golesVisitante, resultado);
 
         guardarEquipos(equipoLocal, equipoVisitante);
+    }
+
+    @Override
+    public void revertirEstadisticasEquipo(Integer golesLocal, Integer golesVisitante, Long equipoLocalId, Long equipoVisitanteId) {
+        Equipo equipoLocal = obtenerEquipo(equipoLocalId);
+        Equipo equipoVisitante = obtenerEquipo(equipoVisitanteId);
+
+        ResultadoPartido resultado = determinarResultado(golesLocal, golesVisitante);
+
+        aplicarRollbackEstadisticasPrevias(golesLocal, golesVisitante, resultado, equipoLocal, equipoVisitante);
+
+        guardarEquipos(equipoLocal, equipoVisitante);
+    }
+
+    private void aplicarRollbackEstadisticasPrevias(Integer golesLocal, Integer golesVisitante, ResultadoPartido resultado, Equipo equipoLocal, Equipo equipoVisitante) {
+        switch (resultado) {
+            case EMPATE:
+                equipoLocal.revertirEmpate(golesLocal, golesVisitante);
+                equipoVisitante.revertirEmpate(golesVisitante, golesLocal);
+                break;
+            case VICTORIA_LOCAL:
+                equipoLocal.revertirVictoria(golesLocal, golesVisitante);
+                equipoVisitante.revertirDerrota(golesVisitante, golesLocal);
+                break;
+            case VICTORIA_VISITANTE:
+                equipoVisitante.revertirVictoria(golesVisitante, golesLocal);
+                equipoLocal.revertirDerrota(golesLocal, golesVisitante);
+        }
     }
 
 
@@ -40,9 +68,12 @@ public class EstadisticasEquipoService implements EstadisticasEquipoUseCase {
         }
     }
 
-    private void aplicarResultadoAEquipos(Equipo equipoLocal, Equipo equipoVisitante,
-                                          int golesLocal, int golesVisitante,
-                                          ResultadoPartido resultado) {
+    private void aplicarNuevoResultadoAEquipos(Equipo equipoLocal,
+                                               Equipo equipoVisitante,
+                                               int golesLocal,
+                                               int golesVisitante,
+                                               ResultadoPartido resultado) {
+
         switch (resultado) {
             case EMPATE:
                 equipoLocal.registrarEmpate(golesLocal, golesVisitante);
