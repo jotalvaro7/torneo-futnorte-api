@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrarGolesJugadorRequest {
-    
+public class GolesJugadorDto {
+
     @NotNull(message = "El ID del jugador es obligatorio")
     private Long jugadorId;
-    
+
     @NotNull(message = "La cantidad de goles es obligatoria")
-    @Min(value = 1, message = "La cantidad de goles debe ser al menos 1")
+    @Min(value = 1, message = "La cantidad de goles debe ser mayor a 0")
     private Integer cantidadGoles;
 }

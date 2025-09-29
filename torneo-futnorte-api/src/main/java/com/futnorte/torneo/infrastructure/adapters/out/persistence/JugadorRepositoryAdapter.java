@@ -83,4 +83,12 @@ public class JugadorRepositoryAdapter implements JugadorRepositoryPort {
                 .map(jugadorMapper::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Jugador> buscarTodosJugadoresPorIds(List<Long> jugadorIds) {
+        return jugadorJpaRepository.findAllById(jugadorIds)
+                .stream()
+                .map(jugadorMapper::toDomain)
+                .collect(Collectors.toList());
+    }
 }

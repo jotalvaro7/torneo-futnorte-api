@@ -1,6 +1,7 @@
 package com.futnorte.torneo.domain.entities;
 
 import com.futnorte.torneo.domain.exceptions.ValidationException;
+
 import java.util.Objects;
 
 public class Equipo {
@@ -57,6 +58,49 @@ public class Equipo {
         this.partidosPerdidos++;
         this.golesAFavor += golesAnotados;
         this.golesEnContra += golesRecibidos;
+    }
+
+    public void revertirVictoria(int golesAnotados, int golesRecibidos) {
+        if (this.partidosJugados - 1 < 0 ||
+                this.partidosGanados - 1 < 0 ||
+                this.puntos - 3 < 0 ||
+                this.golesAFavor - golesAnotados < 0 ||
+                this.golesEnContra - golesRecibidos < 0) {
+            throw new ValidationException("No se puede revertir victoria: los valores resultarían negativos.");
+        }
+        this.partidosJugados -= 1;
+        this.partidosGanados -= 1;
+        this.puntos -= 3;
+        this.golesAFavor -= golesAnotados;
+        this.golesEnContra -= golesRecibidos;
+    }
+
+    public void revertirEmpate(int golesAnotados, int golesRecibidos) {
+        if (this.partidosJugados - 1 < 0 ||
+                this.partidosEmpatados - 1 < 0 ||
+                this.puntos - 1 < 0 ||
+                this.golesAFavor - golesAnotados < 0 ||
+                this.golesEnContra - golesRecibidos < 0) {
+            throw new ValidationException("No se puede revertir empate: los valores resultarían negativos.");
+        }
+        this.partidosJugados -= 1;
+        this.partidosEmpatados -= 1;
+        this.puntos -= 1;
+        this.golesAFavor -= golesAnotados;
+        this.golesEnContra -= golesRecibidos;
+    }
+
+    public void revertirDerrota(int golesAnotados, int golesRecibidos) {
+        if (this.partidosJugados - 1 < 0 ||
+                this.partidosPerdidos - 1 < 0 ||
+                this.golesAFavor - golesAnotados < 0 ||
+                this.golesEnContra - golesRecibidos < 0) {
+            throw new ValidationException("No se puede revertir derrota: los valores resultarían negativos.");
+        }
+        this.partidosJugados -= 1;
+        this.partidosPerdidos -= 1;
+        this.golesAFavor -= golesAnotados;
+        this.golesEnContra -= golesRecibidos;
     }
 
     public int getDiferenciaGoles() {

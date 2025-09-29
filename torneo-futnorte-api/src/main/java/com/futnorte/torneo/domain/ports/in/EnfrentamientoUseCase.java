@@ -1,31 +1,28 @@
 package com.futnorte.torneo.domain.ports.in;
 
-import com.futnorte.torneo.domain.entities.Enfrentamiento;
+import com.futnorte.torneo.application.dto.ActualizarEnfrentamientoApplicationDTO;
+import com.futnorte.torneo.application.dto.EnfrentamientoResponseDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+
 public interface EnfrentamientoUseCase {
-    
-    Enfrentamiento crearEnfrentamiento(Long torneoId, Long equipoLocalId, Long equipoVisitanteId, 
+
+    EnfrentamientoResponseDTO crearEnfrentamiento(Long torneoId, Long equipoLocalId, Long equipoVisitanteId,
                                      LocalDateTime fechaHora, String cancha);
-    
-    Enfrentamiento actualizarEnfrentamiento(Long enfrentamientoId, LocalDateTime fechaHora, String cancha);
-    
-    Enfrentamiento registrarResultado(Long enfrentamientoId, int golesLocal, int golesVisitante);
-    
-    void registrarGolesJugador(Long enfrentamientoId, Long jugadorId, int cantidadGoles);
-    
-    Enfrentamiento cancelarEnfrentamiento(Long enfrentamientoId);
-    
-    Optional<Enfrentamiento> obtenerEnfrentamientoPorId(Long enfrentamientoId);
-    
-    List<Enfrentamiento> obtenerEnfrentamientosPorTorneo(Long torneoId);
-    
-    List<Enfrentamiento> obtenerEnfrentamientosPorEquipo(Long equipoId);
-    
-    List<Enfrentamiento> obtenerEnfrentamientosPorFecha(LocalDateTime fechaInicio, LocalDateTime fechaFin);
-    
+
+    EnfrentamientoResponseDTO actualizarEnfrentamiento(ActualizarEnfrentamientoApplicationDTO actualizarEnfrentamientoApplicationDTO);
+
+    Optional<EnfrentamientoResponseDTO> obtenerEnfrentamientoPorId(Long enfrentamientoId);
+
+    List<EnfrentamientoResponseDTO> obtenerEnfrentamientosPorTorneo(Long torneoId);
+
+    List<EnfrentamientoResponseDTO> obtenerEnfrentamientosPorEquipo(Long equipoId);
+
+    List<EnfrentamientoResponseDTO> obtenerEnfrentamientosPorFecha(LocalDateTime fechaInicio, LocalDateTime fechaFin);
+
     void eliminarEnfrentamiento(Long enfrentamientoId);
+
 }

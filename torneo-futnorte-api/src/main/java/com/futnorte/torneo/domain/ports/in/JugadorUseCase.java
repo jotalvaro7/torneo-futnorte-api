@@ -25,4 +25,6 @@ public interface JugadorUseCase {
     Jugador cambiarEquipo(Long jugadorId, Long nuevoEquipoId);
     
     List<Jugador> obtenerGoleadoresPorTorneo(Long torneoId);
+
+    List<Jugador> buscarJugadoresPorIds(List<Long> jugadorIds);
 }

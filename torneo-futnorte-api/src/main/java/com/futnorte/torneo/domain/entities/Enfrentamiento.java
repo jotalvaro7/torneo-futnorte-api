@@ -31,52 +31,59 @@ public class Enfrentamiento {
         this.fechaHora = fechaHora;
         this.cancha = cancha;
     }
-    
-    public void registrarResultado(int golesLocal, int golesVisitante, 
-                                  Equipo equipoLocal, Equipo equipoVisitante) {
-        if (this.estado != EstadoEnfrentamiento.PROGRAMADO) {
-            throw new BusinessRuleException("Solo se puede registrar resultado en enfrentamientos programados");
-        }
-        
-        if (golesLocal < 0 || golesVisitante < 0) {
-            throw new ValidationException("goles", "no pueden ser negativos");
-        }
-        
-        if (!equipoLocal.getId().equals(this.equipoLocalId) || 
-            !equipoVisitante.getId().equals(this.equipoVisitanteId)) {
-            throw new ValidationException("equipos", "no coinciden con el enfrentamiento");
-        }
-        
-        this.golesLocal = golesLocal;
-        this.golesVisitante = golesVisitante;
-        this.estado = EstadoEnfrentamiento.FINALIZADO;
-        
-        if (golesLocal > golesVisitante) {
-            equipoLocal.registrarVictoria(golesLocal, golesVisitante);
-            equipoVisitante.registrarDerrota(golesVisitante, golesLocal);
-        } else if (golesLocal < golesVisitante) {
-            equipoLocal.registrarDerrota(golesLocal, golesVisitante);
-            equipoVisitante.registrarVictoria(golesVisitante, golesLocal);
-        } else {
-            equipoLocal.registrarEmpate(golesLocal, golesVisitante);
-            equipoVisitante.registrarEmpate(golesVisitante, golesLocal);
-        }
-    }
-    
+
     public void actualizarDetalles(LocalDateTime fechaHora, String cancha) {
-        if (this.estado == EstadoEnfrentamiento.FINALIZADO) {
-            throw new BusinessRuleException("No se puede modificar un enfrentamiento finalizado");
-        }
         this.fechaHora = fechaHora;
         this.cancha = cancha;
     }
-    
-    public void cancelar() {
-        if (this.estado == EstadoEnfrentamiento.FINALIZADO) {
-            throw new BusinessRuleException("No se puede cancelar un enfrentamiento finalizado");
+
+    public void actualizar(LocalDateTime fechaHora, String cancha, EstadoEnfrentamiento estado,
+                          Integer golesLocal, Integer golesVisitante) {
+
+        if (fechaHora != null) {
+            this.fechaHora = fechaHora;
         }
-        this.estado = EstadoEnfrentamiento.CANCELADO;
+
+        if (cancha != null) {
+            this.cancha = cancha;
+        }
+
+        if (estado != null) {
+            actualizarEstado(estado, golesLocal, golesVisitante);
+        }
     }
+
+    private void actualizarEstado(EstadoEnfrentamiento nuevoEstado, Integer golesLocal, Integer golesVisitante) {
+        switch (nuevoEstado) {
+            case FINALIZADO:
+                if (golesLocal == null || golesVisitante == null) {
+                    throw new ValidationException("goles", "son obligatorios para finalizar el enfrentamiento");
+                }
+                if (golesLocal < 0 || golesVisitante < 0) {
+                    throw new ValidationException("goles", "no pueden ser negativos");
+                }
+                this.golesLocal = golesLocal;
+                this.golesVisitante = golesVisitante;
+                this.estado = EstadoEnfrentamiento.FINALIZADO;
+                break;
+
+            case APLAZADO:
+                this.golesLocal = null;
+                this.golesVisitante = null;
+                this.estado = EstadoEnfrentamiento.APLAZADO;
+                break;
+
+            case PROGRAMADO:
+                this.golesLocal = null;
+                this.golesVisitante = null;
+                this.estado = EstadoEnfrentamiento.PROGRAMADO;
+                break;
+
+            default:
+                throw new ValidationException("estado", "estado no válido");
+        }
+    }
+    
     
     public void validarEnfrentamiento() {
         if (this.torneoId == null) {

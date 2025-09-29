@@ -47,6 +47,50 @@ Esta API está encargada de administrar un torneo de fútbol con las siguientes 
 - **Jugador**: Representa un jugador asociado a un equipo
 - **Enfrentamiento**: Representa un partido entre dos equipos con estadísticas
 
+## Buenas Prácticas y Patrones de Diseño
+
+### Patrones de Diseño Aplicados
+- **Repository Pattern**: Abstracción del acceso a datos a través de interfaces
+- **Adapter Pattern**: Implementación de adaptadores para servicios externos
+- **Strategy Pattern**: Diferentes estrategias de implementación según el contexto
+- **Factory Pattern**: Creación de objetos complejos de manera controlada
+- **Command Pattern**: Encapsulación de operaciones en comandos ejecutables
+- **Specification Pattern**: Lógica de consultas reutilizable y combinable
+
+### Principios SOLID
+- **Single Responsibility**: Cada clase tiene una única razón para cambiar
+- **Open/Closed**: Abierto para extensión, cerrado para modificación
+- **Liskov Substitution**: Los objetos deben ser reemplazables por instancias de sus subtipos
+- **Interface Segregation**: Interfaces específicas mejor que una interfaz general
+- **Dependency Inversion**: Depender de abstracciones, no de concreciones
+
+### Buenas Prácticas de Código
+- **Nombres Descriptivos**: Uso de nombres claros y autodocumentados
+- **Métodos Pequeños**: Funciones con una sola responsabilidad
+- **Immutabilidad**: Preferir objetos inmutables cuando sea posible
+- **Validación de Entrada**: Validar datos en los puntos de entrada
+- **Manejo de Errores**: Uso apropiado de excepciones y códigos de error
+- **Testing**: Cobertura de pruebas unitarias e integración
+
+### Convenciones de Nomenclatura
+- **Clases**: PascalCase (ej: `TorneoService`, `EquipoEntity`)
+- **Métodos**: camelCase (ej: `crearTorneo()`, `obtenerEquipos()`)
+- **Variables**: camelCase (ej: `nombreEquipo`, `cantidadJugadores`)
+- **Constantes**: UPPER_SNAKE_CASE (ej: `MAX_JUGADORES_POR_EQUIPO`)
+- **Packages**: lowercase con puntos (ej: `com.futnorte.torneo.domain`)
+
+### Gestión de Transacciones
+- **@Transactional**: Solo en la capa de Application Services
+- **Propagación**: Uso correcto de tipos de propagación
+- **Rollback**: Configuración adecuada para diferentes tipos de excepciones
+- **Lectura**: Usar `readOnly = true` para operaciones de consulta
+
+### Seguridad y Validación
+- **Validación de Entrada**: Bean Validation (JSR-303) en DTOs
+- **Sanitización**: Limpieza de datos de entrada
+- **Autorización**: Control de acceso basado en roles
+- **Logging**: Registro de operaciones críticas sin exponer datos sensibles
+
 ## Comandos de Testing y Linting
 - Build: `./gradlew build` o `mvn clean install`
 - Tests: `./gradlew test` o `mvn test`

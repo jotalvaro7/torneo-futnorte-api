@@ -8,6 +8,7 @@ import com.futnorte.torneo.domain.ports.out.JugadorRepositoryPort;
 import com.futnorte.torneo.domain.ports.out.EquipoRepositoryPort;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -123,5 +124,13 @@ public class JugadorService implements JugadorUseCase {
     @Override
     public List<Jugador> obtenerGoleadoresPorTorneo(Long torneoId) {
         return jugadorRepositoryPort.buscarGoleadoresPorTorneo(torneoId);
+    }
+
+    @Override
+    public List<Jugador> buscarJugadoresPorIds(List<Long> jugadorIds) {
+                if (jugadorIds == null || jugadorIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return jugadorRepositoryPort.buscarTodosJugadoresPorIds(jugadorIds);
     }
 }
