@@ -3,6 +3,7 @@ package com.futnorte.torneo.infrastructure.adapters.out.persistence;
 import com.futnorte.torneo.domain.entities.Enfrentamiento;
 import com.futnorte.torneo.domain.ports.out.EnfrentamientoRepositoryPort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -68,7 +69,11 @@ public class EnfrentamientoRepositoryAdapter implements EnfrentamientoRepository
     
     @Override
     public void deleteById(Long id) {
-        enfrentamientoJpaRepository.deleteById(id);
+        try {
+            enfrentamientoJpaRepository.deleteEnfrentamientoById(id);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al eliminar el enfrentamiento: " + e.getMessage(), e);
+        }
     }
     
     @Override

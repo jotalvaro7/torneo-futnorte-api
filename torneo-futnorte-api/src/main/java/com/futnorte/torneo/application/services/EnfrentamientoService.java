@@ -70,7 +70,7 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
 
         revertirEstadisticasSiYaFinalizado(enfrentamiento, estadoPrevio);
 
-        List<GolesJugador> golesExistentes = obtenerGolesExistentes(actualizarEnfrentamientoApplicationDTO);
+        List<GolesJugador> golesExistentes = obtenerGolesExistentes(actualizarEnfrentamientoApplicationDTO.enfrentamientoId());
 
         aplicarActualizacionEnfrentamiento(actualizarEnfrentamientoApplicationDTO, enfrentamiento);
 
@@ -159,10 +159,27 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
     }
 
     @Override
+    @Transactional
     public void eliminarEnfrentamiento(Long enfrentamientoId) {
+        log.info("Iniciando proceso de eliminación del enfrentamiento ID: {}", enfrentamientoId);
+
         Enfrentamiento enfrentamiento = buscarEnfrentamiento(enfrentamientoId);
+
+        // Si está finalizado, revertir las estadísticas
+        if (enfrentamiento.getEstado() == EstadoEnfrentamiento.FINALIZADO) {
+            log.info("Revirtiendo estadísticas del enfrentamiento finalizado ID: {}", enfrentamientoId);
+            aplicarRevertirEstadisticasEquipos(enfrentamiento);
+        }
+
+        // Eliminar los goles asociados
+        log.debug("Eliminando goles asociados al enfrentamiento ID: {}", enfrentamientoId);
+        golesJugadorUseCase.eliminarGolesJugadoresPorEnfrentamiento(enfrentamientoId);
+
+        // Eliminar el enfrentamiento
+        log.info("Eliminando enfrentamiento ID: {}", enfrentamientoId);
         enfrentamientoRepositoryPort.deleteById(enfrentamientoId);
-        log.debug("Enfrentamiento con id {} eliminado.", enfrentamientoId);
+
+        log.info("Enfrentamiento ID: {} eliminado exitosamente", enfrentamientoId);
     }
 
     private Pair<List<GolesJugadorResponseDTO>, List<GolesJugadorResponseDTO>> mapearGolesPorEquipo(Enfrentamiento enfrentamiento) {
@@ -288,8 +305,8 @@ public class EnfrentamientoService implements EnfrentamientoUseCase {
         );
     }
 
-    private List<GolesJugador> obtenerGolesExistentes(ActualizarEnfrentamientoApplicationDTO actualizarEnfrentamientoApplicationDTO) {
-        return golesJugadorUseCase.obtenerGolesJugadoresPorEnfrentamiento(actualizarEnfrentamientoApplicationDTO.enfrentamientoId());
+    private List<GolesJugador> obtenerGolesExistentes(Long idEnfrentamiento) {
+        return golesJugadorUseCase.obtenerGolesJugadoresPorEnfrentamiento(idEnfrentamiento);
     }
 
     private Enfrentamiento buscarEnfrentamiento(Long enfrentamientoId) {

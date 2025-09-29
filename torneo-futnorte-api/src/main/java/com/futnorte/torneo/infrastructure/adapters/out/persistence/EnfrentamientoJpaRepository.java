@@ -1,6 +1,7 @@
 package com.futnorte.torneo.infrastructure.adapters.out.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,4 +22,9 @@ public interface EnfrentamientoJpaRepository extends JpaRepository<Enfrentamient
     List<EnfrentamientoEntity> findByTorneoIdAndFechaHoraBetween(@Param("torneoId") Long torneoId,
                                                                 @Param("fechaInicio") LocalDateTime fechaInicio,
                                                                 @Param("fechaFin") LocalDateTime fechaFin);
+
+    @Modifying
+    @Query(value = "DELETE FROM enfrentamientos WHERE id = :id", nativeQuery = true)
+    void deleteEnfrentamientoById(@Param("id") Long id);
 }
+

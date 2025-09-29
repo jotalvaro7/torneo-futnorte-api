@@ -15,5 +15,6 @@ public interface GolesJugadorUseCase {
                                 List<GolesJugadorApplicationDTO> golesJugadoresLocal,
                                 List<GolesJugadorApplicationDTO> golesJugadoresVisitante,
                                 List<GolesJugador> golesExistentesAntes);
-
+                                
+    void eliminarGolesJugadoresPorEnfrentamiento(Long enfrentamientoId);
 }
